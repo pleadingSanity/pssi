@@ -1,0 +1,3 @@
+# Python dependencies for PSSI task runner
+requests>=2.31.0
+PyGithub>=2.1.1

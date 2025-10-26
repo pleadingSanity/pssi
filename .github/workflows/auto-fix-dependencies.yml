@@ -1,0 +1,52 @@
+name: Auto-fix Dependencies
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  heal-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install -r python/tasks/requirements.txt
+
+      - name: Run dependency healing (dry-run)
+        if: env.GH_TOKEN == ''
+        run: |
+          python python/tasks/heal_deps.py \
+            --repo ${{ github.repository }} \
+            --branch ${{ github.ref_name }}
+
+      - name: Run dependency healing (create PR)
+        if: env.GH_TOKEN != ''
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          python python/tasks/heal_deps.py \
+            --repo https://github.com/${{ github.repository }} \
+            --branch ${{ github.ref_name }} \
+            --apply
+
+      - name: Comment on commit
+        if: env.GH_TOKEN != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: '✓ Dependency healing completed. Check for PRs.'
+            })
