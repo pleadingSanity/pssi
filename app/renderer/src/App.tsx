@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
-interface SystemStats {
+// Import types from vite-env.d.ts
+type SystemStats = {
   platform: string
   arch: string
   cpus: number
@@ -10,18 +11,6 @@ interface SystemStats {
   uptime: number
   hostname: string
   nodeVersion: string
-}
-
-interface ElectronAPI {
-  getSystemStats: () => Promise<SystemStats>
-  runPythonTask: (taskName: string, args: string[]) => Promise<{ stdout: string; stderr: string }>
-  onMainProcessMessage: (callback: (value: string) => void) => void
-}
-
-declare global {
-  interface Window {
-    electronAPI: ElectronAPI
-  }
 }
 
 function App() {

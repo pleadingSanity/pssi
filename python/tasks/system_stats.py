@@ -50,10 +50,10 @@ def get_system_stats():
             'percent': psutil.virtual_memory().percent
         },
         'disk': {
-            'total': psutil.disk_usage('/').total,
-            'used': psutil.disk_usage('/').used,
-            'free': psutil.disk_usage('/').free,
-            'percent': psutil.disk_usage('/').percent
+            'total': psutil.disk_usage('/').total if platform.system() != 'Windows' else psutil.disk_usage('C:\\').total,
+            'used': psutil.disk_usage('/').used if platform.system() != 'Windows' else psutil.disk_usage('C:\\').used,
+            'free': psutil.disk_usage('/').free if platform.system() != 'Windows' else psutil.disk_usage('C:\\').free,
+            'percent': psutil.disk_usage('/').percent if platform.system() != 'Windows' else psutil.disk_usage('C:\\').percent
         }
     }
     
