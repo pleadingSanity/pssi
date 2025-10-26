@@ -1,0 +1,89 @@
+.repo-healing {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.repo-healing h2 {
+  margin-bottom: 0.5rem;
+  color: #667eea;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.check-btn,
+.fix-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.check-btn {
+  background: #667eea;
+  color: white;
+}
+
+.check-btn:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.fix-btn {
+  background: #28a745;
+  color: white;
+}
+
+.fix-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.check-btn:disabled,
+.fix-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.result-box {
+  background: #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.result-box.error {
+  border-left: 4px solid #dc3545;
+}
+
+.result-box.success {
+  border-left: 4px solid #28a745;
+}
+
+.result-box h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #667eea;
+}
+
+.result-box pre {
+  background: #2a2a2a;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}

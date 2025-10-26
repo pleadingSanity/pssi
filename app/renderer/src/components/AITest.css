@@ -1,0 +1,133 @@
+.ai-test {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.ai-test h2 {
+  margin-bottom: 0.5rem;
+  color: #667eea;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.input-section {
+  background: #333;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.test-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.test-btn:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.test-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.result-box {
+  background: #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.result-box.error {
+  border-left: 4px solid #dc3545;
+}
+
+.result-box.success {
+  border-left: 4px solid #28a745;
+}
+
+.result-box h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #667eea;
+}
+
+.response-details {
+  background: #2a2a2a;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.response-details p {
+  margin: 0.5rem 0;
+}
+
+.response-content {
+  background: #2a2a2a;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.response-content h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #667eea;
+}
+
+.response-content p {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.response-note {
+  font-style: italic;
+  color: #999;
+  padding: 0.5rem;
+  border-top: 1px solid #444;
+}
