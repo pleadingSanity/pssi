@@ -1,0 +1,48 @@
+name: Fusion Sync - Deploy to Cloud
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Netlify Deploy
+        if: secrets.NETLIFY_BUILD_HOOK != ''
+        run: |
+          curl -X POST -d {} "${{ secrets.NETLIFY_BUILD_HOOK }}"
+          echo "✅ Netlify build triggered"
+        continue-on-error: true
+
+      - name: Trigger Vercel Deploy
+        if: secrets.VERCEL_DEPLOY_HOOK != ''
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          echo "✅ Vercel deploy triggered"
+        continue-on-error: true
+
+      - name: Summary
+        run: |
+          echo "### Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
+            echo "- ✅ Netlify: Build triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ℹ️ Netlify: Skipped (no hook configured)" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            echo "- ✅ Vercel: Deploy triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ℹ️ Vercel: Skipped (no hook configured)" >> $GITHUB_STEP_SUMMARY
+          fi
