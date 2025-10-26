@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import rateLimit from 'express-rate-limit'
 import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -13,6 +14,15 @@ const PORT = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
+
+// Rate limiter for expensive operations
+const expensiveOperationLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit each IP to 10 requests per minute
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+})
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
@@ -64,7 +74,7 @@ app.post('/api/ai/test', async (req, res) => {
 })
 
 // Deploy hooks endpoint
-app.post('/api/deploy/hook', async (req, res) => {
+app.post('/api/deploy/hook', expensiveOperationLimiter, async (req, res) => {
   try {
     const { event, repository, ref } = req.body
     
@@ -99,7 +109,7 @@ app.post('/api/deploy/hook', async (req, res) => {
 })
 
 // Repo healing endpoint
-app.post('/api/repo/heal', async (_req, res) => {
+app.post('/api/repo/heal', expensiveOperationLimiter, async (_req, res) => {
   try {
     const pythonPath = join(__dirname, '..', '..', 'python', 'tasks', 'repo_healing.py')
     
