@@ -14,6 +14,26 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Simple in-memory rate limiter for expensive operations
+const rateLimiter = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(ip: string, maxRequests: number = 5, windowMs: number = 60000): boolean {
+  const now = Date.now();
+  const record = rateLimiter.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimiter.set(ip, { count: 1, resetTime: now + windowMs });
+    return true;
+  }
+  
+  if (record.count >= maxRequests) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+}
+
 // GET /stats - Mock system stats
 app.get('/stats', (req: Request, res: Response) => {
   const stats = {
@@ -43,6 +63,15 @@ app.post('/optimize', (req: Request, res: Response) => {
 
 // POST /repos/heal - Run Python heal script
 app.post('/repos/heal', async (req: Request, res: Response) => {
+  const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+  
+  if (!checkRateLimit(clientIp, 5, 60000)) {
+    return res.status(429).json({ 
+      error: 'Too many requests. Please try again later.',
+      retryAfter: 60 
+    });
+  }
+
   const { repoUrl, branch } = req.body;
 
   if (!repoUrl) {
