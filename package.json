@@ -1,2 +1,11 @@
-{"name":"pssi","private":true,"version":"0.1.0","engines":{"node":">
-=20"},"workspaces":["app/*"],"scripts":{"build":"pnpm install && pnpm --filter app/renderer build","vercel-build":"pnpm install && pnpm --filter app/renderer build"}}
+{
+  "name": "pssi",
+  "private": true,
+  "version": "0.1.0",
+  "engines": { "node": ">=20" },
+  "workspaces": ["app/*"],
+  "scripts": {
+    "build": "pnpm install && pnpm --filter app/renderer build",
+    "vercel-build": "pnpm install && pnpm --filter app/renderer build"
+  }
+}
