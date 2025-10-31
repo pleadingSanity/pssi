@@ -13,6 +13,9 @@
     "build:renderer": "vite build",
     "build:electron": "tsc -p app/electron/tsconfig.json",
     "build:server": "tsc -p app/server/tsconfig.json",
+    "package": "pnpm run build && electron-builder",
+    "package:win": "pnpm run build && electron-builder --win",
+    "package:all": "pnpm run build && electron-builder --win --mac --linux",
     "start": "electron .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
@@ -53,10 +56,54 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "axios": "^1.6.2",
-    "systeminformation": "^5.21.20"
+    "systeminformation": "^5.21.20",
+    "openai": "^4.20.1",
+    "dotenv": "^16.3.1"
   },
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "build": {
+    "appId": "com.pleadingsanity.pssi",
+    "productName": "PSSI",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "PSSI-${version}-${arch}-setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility",
+      "icon": "build/icon.png"
+    }
   }
 }
