@@ -1,0 +1,2 @@
+# Python dependencies for PSSI tasks
+psutil>=5.9.0
