@@ -44,7 +44,7 @@ function AITest() {
           <select
             id="model"
             value={model}
-            onChange={(e) => setModel((e.target as HTMLSelectElement).value)}
+            onChange={(e) => setModel(e.target.value)}
           >
             <option value="default">Default</option>
             <option value="gpt-4">GPT-4</option>
@@ -57,7 +57,7 @@ function AITest() {
           <textarea
             id="prompt"
             value={prompt}
-            onChange={(e) => setPrompt((e.target as HTMLTextAreaElement).value)}
+            onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter your AI prompt here..."
             rows={6}
           />

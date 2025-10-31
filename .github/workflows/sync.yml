@@ -46,9 +46,12 @@ jobs:
         
       - name: Check for updates
         id: check-updates
+        shell: pwsh
         run: |
-          git diff --exit-code package.json pnpm-lock.yaml || echo "has_updates=true" >> $GITHUB_OUTPUT
-        shell: bash
+          git diff --exit-code package.json pnpm-lock.yaml
+          if ($LASTEXITCODE -ne 0) {
+            "has_updates=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
         
       - name: Create Pull Request
         if: steps.check-updates.outputs.has_updates == 'true'

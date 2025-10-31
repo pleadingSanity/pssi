@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { resolve } from 'path';
 
 const execAsync = promisify(exec);
 
@@ -33,8 +34,12 @@ export async function repoHealing(req: Request, res: Response) {
 
 async function checkRepoHealth() {
   try {
-    const { stdout: status } = await execAsync('git status --porcelain');
-    const { stdout: branch } = await execAsync('git branch --show-current');
+    // Validate we're in a git repository and set a safe working directory
+    const cwd = resolve(process.cwd());
+    
+    // Execute git commands with safe options
+    const { stdout: status } = await execAsync('git status --porcelain', { cwd });
+    const { stdout: branch } = await execAsync('git branch --show-current', { cwd });
     
     return {
       status: 'success',
