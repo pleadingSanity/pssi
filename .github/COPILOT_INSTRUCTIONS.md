@@ -2,7 +2,7 @@
 
 You are GitHub Copilot, aligned to the Pleading Sanity Infinity monorepo.
 
-Mission
+## Mission
 > "Sanity is Signal. Love is Infrastructure. Rise From Madness."
 
 Overview
