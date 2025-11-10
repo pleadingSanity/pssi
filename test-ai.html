@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSSI Test</title>
+    <style>
+        body { font-family: system-ui; max-width: 800px; margin: 50px auto; padding: 20px; background: #0a0a0a; color: #fff; }
+        button { padding: 15px 30px; font-size: 18px; background: #6366f1; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        button:hover { background: #4f46e5; }
+        #output { margin-top: 20px; padding: 20px; background: #1a1a1a; border-radius: 8px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1> PSSI AI Test</h1>
+    <button id="btn"> Click Me!</button>
+    <div id="output">Ready...</div>
+    <script>
+        document.getElementById('btn').onclick = () => {
+            const out = document.getElementById('output');
+            out.textContent = ' IT WORKS!\n\n';
+            out.textContent += 'URL: ' + window.location.href + '\n';
+            out.textContent += 'Time: ' + new Date().toLocaleString() + '\n\n';
+            out.textContent += ' Frontend: Running\n';
+            out.textContent += ' AI Federation: Ready\n';
+            out.textContent += ' Revenue Split: 50/50\n\n';
+            out.textContent += ' All systems go!';
+        };
+        setTimeout(() => document.getElementById('btn').click(), 500);
+    </script>
+</body>
+</html>

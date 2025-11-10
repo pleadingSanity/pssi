@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSSI AI Demo</title>
+    <style>
+        body { 
+            font-family: system-ui; 
+            max-width: 900px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background: #0a0a0a; 
+            color: #fff; 
+        }
+        h1 { color: #6366f1; }
+        .container { background: #1a1a1a; padding: 30px; border-radius: 12px; margin: 20px 0; }
+        textarea { 
+            width: 100%; 
+            min-height: 120px; 
+            padding: 15px; 
+            background: #0a0a0a; 
+            color: #fff; 
+            border: 2px solid #333; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-family: system-ui;
+            resize: vertical;
+        }
+        button { 
+            padding: 15px 30px; 
+            font-size: 18px; 
+            background: #6366f1; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px 5px 10px 0;
+        }
+        button:hover { background: #4f46e5; }
+        button:disabled { background: #333; cursor: not-allowed; }
+        .response { 
+            margin-top: 20px; 
+            padding: 20px; 
+            background: #0a0a0a; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            border-left: 4px solid #6366f1;
+        }
+        .status { 
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            margin: 10px 0; 
+            font-size: 14px;
+        }
+        .status.success { background: #065f46; color: #6ee7b7; }
+        .status.error { background: #7f1d1d; color: #fca5a5; }
+        .status.info { background: #1e3a8a; color: #93c5fd; }
+        select {
+            padding: 10px 15px;
+            background: #0a0a0a;
+            color: #fff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .meta {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🤖 PSSI AI System - Live Demo</h1>
+    
+    <div class="container">
+        <h2>Ask the AI Anything</h2>
+        <div id="status"></div>
+        
+        <label for="provider">Choose AI Provider:</label><br>
+        <select id="provider">
+            <option value="auto">Auto (First Available)</option>
+            <option value="openai">OpenAI GPT-4o</option>
+            <option value="anthropic">Anthropic Claude 3.5</option>
+            <option value="gemini">Google Gemini 2.0</option>
+        </select><br>
+        
+        <label for="prompt">Your Prompt:</label><br>
+        <textarea id="prompt" placeholder="Ask me anything... Try: 'Explain quantum computing in simple terms'">Tell me a fascinating fact about the universe</textarea><br>
+        
+        <button id="sendBtn">🚀 Send to AI</button>
+        <button id="healthBtn">🏥 Check Health</button>
+        
+        <div id="response"></div>
+    </div>
+
+    <script type="module">
+        const sendBtn = document.getElementById('sendBtn');
+        const healthBtn = document.getElementById('healthBtn');
+        const promptInput = document.getElementById('prompt');
+        const providerSelect = document.getElementById('provider');
+        const responseDiv = document.getElementById('response');
+        const statusDiv = document.getElementById('status');
+
+        // Check health on load
+        window.addEventListener('load', checkHealth);
+
+        async function checkHealth() {
+            showStatus('Checking AI system health...', 'info');
+            try {
+                const response = await fetch('/.netlify/functions/ai-health');
+                const data = await response.json();
+                
+                const providers = Object.entries(data.providers)
+                    .map(([name, available]) => `${available ? '✅' : '❌'} ${name}`)
+                    .join(', ');
+                
+                showStatus(`Status: ${data.status} | Providers: ${providers}`, 'success');
+            } catch (error) {
+                showStatus('⚠️ AI backend not available. Make sure server is running.', 'error');
+            }
+        }
+
+        healthBtn.onclick = checkHealth;
+
+        sendBtn.onclick = async () => {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                showStatus('Please enter a prompt', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳ Thinking...';
+            responseDiv.innerHTML = '';
+            showStatus('Sending to AI...', 'info');
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch('/.netlify/functions/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        provider: providerSelect.value,
+                        prompt: prompt,
+                        temperature: 0.7,
+                        maxTokens: 1000
+                    })
+                });
+
+                const data = await response.json();
+                const elapsed = Date.now() - startTime;
+
+                if (data.success) {
+                    responseDiv.innerHTML = `
+<div class="response">
+<strong>🤖 AI Response:</strong><br><br>
+${data.content}
+<div class="meta">
+Provider: ${data.provider} | Model: ${data.model} | 
+Tokens: ${data.usage?.totalTokens || 'N/A'} | 
+Time: ${elapsed}ms
+</div>
+</div>`;
+                    showStatus('✅ Response received!', 'success');
+                } else {
+                    responseDiv.innerHTML = `<div class="response" style="border-color: #ef4444;">❌ Error: ${data.error}</div>`;
+                    showStatus('Failed to get AI response', 'error');
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<div class="response" style="border-color: #ef4444;">❌ Error: ${error.message}</div>`;
+                showStatus('Request failed. Is the server running?', 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = '🚀 Send to AI';
+            }
+        };
+
+        function showStatus(message, type) {
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // Allow Enter to submit (with Shift+Enter for new line)
+        promptInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

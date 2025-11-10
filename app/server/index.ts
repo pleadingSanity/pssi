@@ -5,6 +5,7 @@ import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import os from 'os'
+import aiRoutes from './routes/ai.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
+
+// Mount AI routes
+app.use('/api/ai', aiRoutes)
 
 // Rate limiter for expensive operations
 const expensiveOperationLimiter = rateLimit({
