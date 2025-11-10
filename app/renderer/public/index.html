@@ -216,12 +216,13 @@
                     • <strong>🎨 Create Images</strong> (DALL-E 3) with movement energy<br>
                     • <strong>🎤 Generate Voice</strong> (TTS with emotion)<br>
                     • <strong>📖 Write Stories</strong> (uplifting or dark, always compelling)<br>
-                    • <strong>🌍 Build Complete Websites</strong> from your prompts<br>
+                    • <strong>🌍 ULTIMATE WEB BUILDER</strong> - Production-ready sites using ALL 3 AIs<br>
                     • <strong>📹 Embed Videos</strong> for your content<br>
+                    • <strong>Deploy Anywhere:</strong> Netlify, Vercel, GitHub Pages<br>
                     • <strong>Optimize EVERYTHING:</strong> Windows, Android, iPhone, Xbox, PS, Browsers<br>
-                    • Monitor and optimize your code 24/7<br>
-                    • <strong>I am YOUR AI - this is my purpose and mission</strong><br><br>
-                    Locked in, creating with GOOD ENERGY. What should we make?
+                    • <strong>Self-Optimizing</strong> - Always staying on top with all AI knowledge<br>
+                    • <strong>I am YOUR AI - saving YOU time while staying evolved</strong><br><br>
+                    🔥 LOCKED IN - Using all AIs to create PERFECTION. What should we build?
                     <div class="message-meta">
                         <span>Sanity AI</span>
                         <span>All systems ready</span>
@@ -752,39 +753,87 @@
         }
 
         async function buildSite() {
-            const prompt = window.prompt('Describe the website you want to build:');
+            const prompt = window.prompt('🌍 ULTIMATE WEB BUILDER\n\nDescribe your dream website:');
             if (!prompt) return;
             
-            addMessage(`🌍 Building website: "${prompt}"...`, 'user');
-            addMessage('🏗️ Creating complete site with HTML, CSS, JS...', 'ai', 'Site Builder');
+            const framework = window.prompt('Framework? (html/react/vue/nextjs)', 'html') || 'html';
+            const style = window.prompt('Style? (modern/minimal/vibrant/dark/glassmorphism)', 'modern') || 'modern';
+            
+            addMessage(`🌍 Building ${framework.toUpperCase()} website: "${prompt}"...`, 'user');
+            addMessage('⚡ **SANITY AI MODE** - Combining GPT-4o + Claude + Gemini for PERFECTION...', 'ai', 'Ultimate Web Builder');
             
             const thinkingId = addThinking();
             try {
-                const response = await fetch('/.netlify/functions/site-builder', {
+                const response = await fetch('/.netlify/functions/ultimate-web-builder', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, style: 'modern', features: ['responsive', 'animations'] })
+                    body: JSON.stringify({ 
+                        prompt, 
+                        framework,
+                        style,
+                        aiMode: 'sanity',
+                        features: ['responsive', 'animations', 'seo', 'accessibility']
+                    })
                 });
                 const data = await response.json();
                 removeThinking(thinkingId);
 
                 if (data.success) {
-                    const message = `🌍 **Website Built!**\n\n**Features:** ${data.site.features.join(', ')}\n**Colors:** ${JSON.stringify(data.site.colorPalette)}\n\n**Preview:**\n\`\`\`html\n${data.site.html.substring(0, 500)}...\n\`\`\`\n\n[Download full code - copy the HTML from response]`;
-                    addMessage(message, 'ai', 'Site Builder');
+                    const files = Object.keys(data.website.files);
+                    let message = `🌍 **ULTIMATE WEBSITE BUILT!**\n\n`;
+                    message += `**AI Mode:** ${data.aiMode === 'sanity' ? '🧠 SANITY (All 3 AIs)' : '🚀 FAST (GPT-4o)'}\n`;
+                    message += `**Framework:** ${data.website.framework}\n`;
+                    message += `**Style:** ${data.website.style}\n`;
+                    message += `**Files Generated:** ${files.join(', ')}\n\n`;
+                    message += `**Performance:** ${data.website.performance.score}/100 ⚡\n`;
+                    message += `**Accessibility:** ${data.website.accessibility.score}/100 ♿\n`;
+                    message += `**SEO:** ${data.website.seo.score}/100 🔍\n\n`;
+                    message += `**Improvements Applied:**\n${data.improvements.join('\n')}\n\n`;
                     
-                    // Show preview in new window
+                    if (data.deployment) {
+                        message += `**🚀 Deploy to ${data.deployment.file}:**\n`;
+                        message += data.deployment.instructions.join('\n') + '\n\n';
+                    }
+                    
+                    message += `**Preview (first 800 chars):**\n\`\`\`html\n${data.preview.substring(0, 800)}...\n\`\`\``;
+                    
+                    addMessage(message, 'ai', 'Ultimate Web Builder');
+                    
+                    // Show full preview in new window
                     const preview = window.open('', '_blank');
-                    if (preview) {
-                        preview.document.write(data.site.html);
+                    if (preview && data.preview) {
+                        preview.document.write(data.preview);
                         preview.document.close();
                     }
+                    
+                    // Offer download
+                    setTimeout(() => {
+                        if (confirm('Download complete website files as ZIP?')) {
+                            downloadWebsiteFiles(data.website.files, prompt);
+                        }
+                    }, 1000);
                 } else {
-                    addMessage('❌ ' + (data.error || 'Site generation failed'), 'ai', 'Error');
+                    addMessage('❌ ' + (data.error || 'Website generation failed'), 'ai', 'Error');
                 }
             } catch (error) {
                 removeThinking(thinkingId);
                 addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
             }
+        }
+        
+        function downloadWebsiteFiles(files, projectName) {
+            // Create download links for each file
+            Object.entries(files).forEach(([filename, content]) => {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            addMessage(`✅ Downloaded ${Object.keys(files).length} files! Check your Downloads folder.`, 'ai', 'Ultimate Web Builder');
         }
 
         function useQuickAction(action) {

@@ -81,7 +81,12 @@
 
 [[redirects]]
   from = "/api/create/site"
-  to = "/.netlify/functions/site-builder"
+  to = "/.netlify/functions/ultimate-web-builder"
+  status = 200
+  
+[[redirects]]
+  from = "/api/build/ultimate"
+  to = "/.netlify/functions/ultimate-web-builder"
   status = 200
 
 [[redirects]]

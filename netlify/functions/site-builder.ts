@@ -1,4 +1,7 @@
 /**
+ * DEPRECATED - Use ultimate-web-builder.ts instead
+ * This is kept for backwards compatibility
+ * 
  * Netlify Serverless Function - Full Site Builder
  * Creates complete websites from user prompts
  */
