@@ -31,6 +31,11 @@ const handler: Handler = async (event: HandlerEvent) => {
     const anthropicKey = process.env.VITE_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
     const geminiKey = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
+    // Validate API keys
+    if (!openaiKey || !anthropicKey || !geminiKey) {
+      throw new Error('Missing AI provider API keys. Please configure all three providers.');
+    }
+
     console.log(`🤝 AI Collaboration: ${requestingAI} → ${targetAIs}`);
     console.log(`📋 Action: ${action}`);
     console.log(`🎯 Task: ${task}`);
