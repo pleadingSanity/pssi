@@ -90,6 +90,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/settings/*"
+  to = "/.netlify/functions/settings/:splat"
+  status = 200
+
+[[redirects]]
   from = "/api/payment/*"
   to = "/.netlify/functions/stripe-payment/:splat"
   status = 200
