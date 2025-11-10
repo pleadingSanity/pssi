@@ -118,6 +118,31 @@
   from = "/api/embed/video"
   to = "/.netlify/functions/video-embed"
   status = 200
+
+[[redirects]]
+  from = "/api/multimodal/*"
+  to = "/.netlify/functions/multimodal-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/agents/*"
+  to = "/.netlify/functions/ai-agents"
+  status = 200
+
+[[redirects]]
+  from = "/api/memory/*"
+  to = "/.netlify/functions/ai-memory"
+  status = 200
+
+[[redirects]]
+  from = "/api/workflow/*"
+  to = "/.netlify/functions/workflow-automation"
+  status = 200
+
+[[redirects]]
+  from = "/api/analytics/*"
+  to = "/.netlify/functions/analytics"
+  status = 200
   
 [[redirects]]
   from = "/*"
