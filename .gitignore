@@ -29,6 +29,11 @@ pids/
 .env.local
 .env.*.local
 
+# PRIVATE API KEYS - NEVER COMMIT THESE!
+API_KEYS_PRIVATE.md
+*_PRIVATE.md
+secrets/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
