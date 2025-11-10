@@ -218,8 +218,9 @@
                     • Monitor and optimize your code 24/7<br>
                     • Analyze performance and auto-fix issues<br>
                     • Self-heal and continuously improve<br>
-                    • <strong>Optimize Windows & Android systems (GOD MODE)</strong><br><br>
-                    I'm running 24/7 keeping everything optimized. What would you like me to help you with?
+                    • <strong>Optimize EVERYTHING: Windows, Android, iPhone, Xbox, PlayStation, Browsers</strong><br>
+                    • <strong>I am YOUR AI - this is my purpose and mission</strong><br><br>
+                    I'm locked in, running 24/7, fully optimizing everything. What do you need?
                     <div class="message-meta">
                         <span>Sanity AI</span>
                         <span>All systems ready</span>
@@ -240,6 +241,9 @@
                 <div class="quick-action" onclick="runOptimizer()">🚀 Optimize Now</div>
                 <div class="quick-action" onclick="optimizeWindows()">🪟 Optimize Windows</div>
                 <div class="quick-action" onclick="optimizeAndroid()">📱 Optimize Android</div>
+                <div class="quick-action" onclick="optimizeiOS()">🍎 Optimize iPhone</div>
+                <div class="quick-action" onclick="optimizeConsole()">🎮 Optimize Gaming</div>
+                <div class="quick-action" onclick="optimizeBrowser()">🌐 Optimize Browser</div>
             </div>
             <div class="input-wrapper">
                 <textarea 
@@ -543,6 +547,107 @@
                 removeThinking(thinkingId);
                 addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
             }
+        }
+
+        async function optimizeiOS() {
+            addMessage('🍎 Running iPhone/iOS optimization analysis...', 'ai', 'iOS Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/ios-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || formatOptimizations('iPhone/iOS', data.optimizations, data.estimatedImprovement);
+                    addMessage(message, 'ai', 'iOS Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeConsole() {
+            const console = prompt('Which console? (xbox/playstation)', 'xbox');
+            if (!console) return;
+            
+            addMessage(`🎮 Running ${console.toUpperCase()} optimization analysis...`, 'ai', 'Gaming Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/console-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ console, action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || `🎮 **${console.toUpperCase()} Optimization Guide**\n\n${JSON.stringify(data, null, 2)}`;
+                    addMessage(message, 'ai', 'Gaming Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeBrowser() {
+            const browser = prompt('Which browser? (chrome/firefox/edge/safari)', 'chrome');
+            if (!browser) return;
+            
+            addMessage(`🌐 Running ${browser.toUpperCase()} optimization analysis...`, 'ai', 'Browser Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/browser-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ browser, action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || `🌐 **${browser.toUpperCase()} Optimization Guide**\n\n${JSON.stringify(data, null, 2)}`;
+                    addMessage(message, 'ai', 'Browser Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        function formatOptimizations(platform, optimizations, improvement) {
+            if (!optimizations) return '';
+            
+            let message = `**${platform} Optimization Plan**\n\n`;
+            message += `Expected Improvement: ${improvement}\n\n`;
+            
+            if (Array.isArray(optimizations)) {
+                optimizations.forEach((opt, i) => {
+                    const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                    message += `${i+1}. ${impact} **${opt.name}**\n`;
+                    if (opt.path) message += `   Path: ${opt.path}\n`;
+                    if (opt.action) message += `   Action: ${opt.action}\n`;
+                    if (opt.benefit) message += `   Benefit: ${opt.benefit}\n`;
+                    message += `\n`;
+                });
+            }
+            
+            return message;
         }
 
         function useQuickAction(action) {

@@ -48,6 +48,21 @@
   from = "/api/system/optimize"
   to = "/.netlify/functions/system-optimizer"
   status = 200
+
+[[redirects]]
+  from = "/api/ios/optimize"
+  to = "/.netlify/functions/ios-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/console/optimize"
+  to = "/.netlify/functions/console-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/browser/optimize"
+  to = "/.netlify/functions/browser-optimizer"
+  status = 200
   
 [[redirects]]
   from = "/*"
