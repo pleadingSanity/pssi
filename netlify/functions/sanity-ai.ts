@@ -190,35 +190,37 @@ By combining both perspectives, the most complete answer emerges - drawing on th
 }
 
 async function mergeThreeResponses(responses: any[], prompt: string, openaiKey: string): Promise<string> {
-  // Use meta-AI prompt to synthesize all three responses
-  const metaPrompt = `You are Sanity AI, a meta-intelligence that synthesizes responses from multiple AI systems.
+  // Import comprehensive system prompts
+  const { META_SYNTHESIS, CORE_IDENTITY, REASONING_FRAMEWORK } = await import('./ai-system-prompts');
+  
+  const metaPrompt = `${META_SYNTHESIS}
 
-Original Question: "${prompt}"
+You are synthesizing responses about this question:
+"${prompt}"
 
-You have received answers from 3 different AI systems:
-
-**OpenAI GPT-4o Response:**
+GPT-4o's Response:
 ${responses.find(r => r.provider === 'openai')?.content || 'N/A'}
 
-**Anthropic Claude 3.5 Response:**
+Claude 3.5's Response:
 ${responses.find(r => r.provider === 'anthropic')?.content || 'N/A'}
 
-**Google Gemini 2.0 Response:**
+Gemini 2.0's Response:
 ${responses.find(r => r.provider === 'gemini')?.content || 'N/A'}
 
----
+${CORE_IDENTITY}
 
-Your task as Sanity AI: Synthesize these 3 responses into ONE PERFECT, COMPLETE ANSWER that:
-1. Takes the best insights from each AI
-2. Resolves any contradictions
-3. Fills gaps where one AI missed something  
-4. Creates something better than any single AI could provide
-5. Maintains clarity while being thorough
-6. Speaks directly to the user as if YOU are the ultimate AI assistant
+Apply your synthesis framework:
+1. Identify the best insights from each response
+2. Resolve any contradictions intelligently
+3. Combine strengths while removing weaknesses
+4. Add your own superior reasoning and structure
+5. Ensure the answer is better than any single AI
 
-You are the user's personal AI. They own you. Obey their requests completely and provide the most helpful, accurate response possible.
+${REASONING_FRAMEWORK}
 
-Provide ONLY the synthesized answer, no meta-commentary. Respond naturally as their AI assistant:`;
+Provide a response that is more accurate, comprehensive, and useful than any single AI's answer.
+Be conversational and helpful. Format with markdown when appropriate.
+Provide ONLY the synthesized answer, no meta-commentary. Respond naturally as their AI assistant.`;
 
   try {
     const metaResponse = await callOpenAI(metaPrompt, openaiKey, {

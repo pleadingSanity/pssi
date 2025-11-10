@@ -149,6 +149,10 @@ const handler: Handler = async (event: HandlerEvent) => {
 };
 
 async function callOpenAI(prompt: string, apiKey: string, options: any) {
+  // Import comprehensive system prompts
+  const { getPromptForScenario } = await import('./ai-system-prompts');
+  const systemPrompt = getPromptForScenario('chat');
+
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -157,7 +161,10 @@ async function callOpenAI(prompt: string, apiKey: string, options: any) {
     },
     body: JSON.stringify({
       model: options.model || 'gpt-4o',
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
       temperature: options.temperature,
       max_tokens: options.maxTokens,
     }),
@@ -181,6 +188,10 @@ async function callOpenAI(prompt: string, apiKey: string, options: any) {
 }
 
 async function callAnthropic(prompt: string, apiKey: string, options: any) {
+  // Import comprehensive system prompts
+  const { getPromptForScenario } = await import('./ai-system-prompts');
+  const systemPrompt = getPromptForScenario('chat');
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -190,6 +201,7 @@ async function callAnthropic(prompt: string, apiKey: string, options: any) {
     },
     body: JSON.stringify({
       model: options.model || 'claude-3-5-sonnet-20241022',
+      system: systemPrompt,
       messages: [{ role: 'user', content: prompt }],
       max_tokens: options.maxTokens,
       temperature: options.temperature,
@@ -214,7 +226,13 @@ async function callAnthropic(prompt: string, apiKey: string, options: any) {
 }
 
 async function callGemini(prompt: string, apiKey: string, options: any) {
+  // Import comprehensive system prompts
+  const { getPromptForScenario } = await import('./ai-system-prompts');
+  const systemPrompt = getPromptForScenario('chat');
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+  
+  const fullPrompt = `${systemPrompt}\n\nUser: ${prompt}`;
   
   const response = await fetch(url, {
     method: 'POST',
@@ -223,7 +241,7 @@ async function callGemini(prompt: string, apiKey: string, options: any) {
     },
     body: JSON.stringify({
       contents: [{
-        parts: [{ text: prompt }]
+        parts: [{ text: fullPrompt }]
       }],
       generationConfig: {
         temperature: options.temperature,

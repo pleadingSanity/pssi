@@ -79,8 +79,15 @@ const handler: Handler = async (event: HandlerEvent) => {
 };
 
 async function analyzeCode(code: string, filepath: string, action: string, apiKey: string) {
+  // Import comprehensive code expert prompts
+  const { CODE_EXPERT, REASONING_FRAMEWORK } = await import('./ai-system-prompts');
+  
+  const systemContext = `${CODE_EXPERT}\n\n${REASONING_FRAMEWORK}\n\nYou are analyzing code to help developers write better, safer, more performant applications.`;
+  
   const prompts = {
-    analyze: `You are an expert code analyzer. Analyze this code and find ALL issues:
+    analyze: `${systemContext}
+
+Analyze this code and find ALL issues:
 
 File: ${filepath}
 \`\`\`
@@ -89,7 +96,7 @@ ${code}
 
 Find and report:
 1. 🐛 Bugs and errors
-2. 🔒 Security vulnerabilities
+2. 🔒 Security vulnerabilities (SQL injection, XSS, CSRF, etc.)
 3. ⚡ Performance issues
 4. 📝 Code quality problems
 5. 🎨 Style inconsistencies
@@ -110,7 +117,9 @@ Format response as JSON:
   "summary": "overall assessment"
 }`,
 
-    fix: `You are an expert code fixer. Fix ALL issues in this code:
+    fix: `${systemContext}
+
+Fix ALL issues in this code:
 
 File: ${filepath}
 \`\`\`
