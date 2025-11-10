@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanity AI - The Ultimate AI Companion 🧠</title>
+    <title>P.S-Full.AI - Complete AI Intelligence System 🧠</title>
     <style>
         * {
             margin: 0;
@@ -224,8 +224,8 @@
 </head>
 <body>
     <div class="main-header">
-        <h1>� Sanity AI - The Ultimate AI Companion</h1>
-        <p class="subtitle">Powered by ALL Major AI Systems Working Together</p>
+        <h1>🧠 P.S-Full.AI</h1>
+        <p class="subtitle">Complete AI Intelligence System - Powered by ALL Major AI Providers</p>
         <div style="margin-top: 15px;">
             <span class="ai-badge">🤖 OpenAI GPT-4o</span>
             <span class="ai-badge">🧠 Claude 3.5 Sonnet</span>
@@ -236,7 +236,7 @@
     
     <div class="container">
         <div class="knowledge-panel">
-            <h3>🌟 What Makes Sanity AI Different</h3>
+            <h3>🌟 What Makes P.S-Full.AI Different</h3>
             <ul>
                 <li><strong>31 AI Functions</strong> - All working together for you</li>
                 <li><strong>Emotional Intelligence</strong> - Understands and cares about your feelings</li>
@@ -247,12 +247,12 @@
             </ul>
         </div>
 
-        <h2>💬 Chat with the Ultimate AI</h2>
+        <h2>💬 Chat with P.S-Full.AI</h2>
         <div id="status"></div>
         
-        <label for="provider">🤖 Choose Your AI Experience:</label>
+        <label for="provider">🤖 Choose Your AI Provider:</label>
         <select id="provider">
-            <option value="sanity">🧠 Sanity AI - ALL AIs Combined (RECOMMENDED!)</option>
+            <option value="sanity">🧠 P.S-Full.AI - ALL AIs Combined (RECOMMENDED!)</option>
             <option value="auto">⚡ Auto Select (First Available)</option>
             <option value="openai">🤖 OpenAI GPT-4o (Powerful & Creative)</option>
             <option value="anthropic">🧠 Anthropic Claude 3.5 (Thoughtful & Precise)</option>
@@ -298,7 +298,7 @@ Try:
     </div>
 
     <div class="container">
-        <h2>🎯 What Can Sanity AI Do?</h2>
+        <h2>🎯 What Can P.S-Full.AI Do?</h2>
         <div class="knowledge-panel">
             <h3>🧠 Core Capabilities</h3>
             <ul>
@@ -331,7 +331,7 @@ Try:
                 <li><strong>OpenAI GPT-4o:</strong> Creative, versatile, excellent at writing</li>
                 <li><strong>Anthropic Claude:</strong> Thoughtful, precise, great reasoning</li>
                 <li><strong>Google Gemini:</strong> Fast, multimodal, efficient</li>
-                <li><strong>Sanity AI:</strong> ALL of them combined + emotional intelligence</li>
+                <li><strong>P.S-Full.AI:</strong> ALL of them combined + emotional intelligence</li>
                 <li><strong>Result:</strong> Best of all worlds - speed, creativity, accuracy, care</li>
             </ul>
         </div>
@@ -347,7 +347,7 @@ Try:
         const responseDiv = document.getElementById('response');
         const statusDiv = document.getElementById('status');
 
-        // AI Knowledge Base - Everything AI knows
+        // P.S-Full.AI Knowledge Base - Everything AI knows
         const AI_KNOWLEDGE = {
             totalFunctions: 31,
             aiProviders: ['OpenAI GPT-4o', 'Anthropic Claude 3.5', 'Google Gemini 2.0'],
@@ -380,7 +380,7 @@ Try:
         // Show AI knowledge on load
         window.addEventListener('load', () => {
             checkHealth();
-            console.log('🧠 Sanity AI Knowledge Base:', AI_KNOWLEDGE);
+            console.log('🧠 P.S-Full.AI Knowledge Base:', AI_KNOWLEDGE);
             console.log('💙 Emotional Intelligence: ACTIVE');
             console.log('🌐 AI Collaboration Network: READY');
         });
@@ -426,19 +426,19 @@ Try:
             try {
                 const startTime = Date.now();
                 
-                // Use Sanity AI for best results
-                const isSanityAI = providerSelect.value === 'sanity';
-                const endpoint = isSanityAI 
+                // Use P.S-Full.AI for best results
+                const isPSFullAI = providerSelect.value === 'sanity';
+                const endpoint = isPSFullAI 
                     ? '/.netlify/functions/sanity-ai'
                     : '/.netlify/functions/ai-chat';
                 
-                const requestBody = isSanityAI
+                const requestBody = isPSFullAI
                     ? {
                         prompt: prompt,
                         temperature: 0.7,
                         maxTokens: 2000,
-                        // Sanity AI gets full context
-                        systemContext: `You are Sanity AI - the ultimate AI companion with emotional intelligence.
+                        // P.S-Full.AI gets full context
+                        systemContext: `You are P.S-Full.AI - the complete AI intelligence system with emotional awareness.
                         
 You have access to ALL knowledge from:
 - OpenAI GPT-4o (creative, versatile)
@@ -481,35 +481,35 @@ Remember: You're not just answering questions - you're building a relationship.`
                 const elapsed = Date.now() - startTime;
 
                 if (data.success) {
-                    const isSanityResponse = data.provider === 'sanity_ai';
-                    const modelInfo = isSanityResponse 
+                    const isPSFullResponse = data.provider === 'sanity_ai';
+                    const modelInfo = isPSFullResponse 
                         ? `${data.aiCount || 'Multiple'} AIs (${data.contributors?.join(', ') || 'Combined'})` 
                         : data.model;
                     
-                    const aiIcon = isSanityResponse ? '🧠' : 
+                    const aiIcon = isPSFullResponse ? '🧠' : 
                                  data.provider === 'openai' ? '🤖' :
                                  data.provider === 'anthropic' ? '🧠' : '✨';
                     
                     responseDiv.innerHTML = `
 <div class="response">
-<strong>${aiIcon} ${isSanityResponse ? 'Sanity AI' : data.provider.toUpperCase()} Response:</strong><br><br>
+<strong>${aiIcon} ${isPSFullResponse ? 'P.S-Full.AI' : data.provider.toUpperCase()} Response:</strong><br><br>
 ${formatResponse(data.content)}
 <div class="meta">
 🤖 Provider: ${data.provider} | 
 ⚙️ Model: ${modelInfo} | 
 📊 Tokens: ${data.usage?.totalTokens || 'N/A'} | 
-⚡ Speed: ${elapsed}ms${isSanityResponse ? ' | 🌟 Method: ' + (data.mergeMethod || 'Combined') : ''}
-${isSanityResponse ? '<br>💙 Emotional Intelligence: Active | 🧠 Full AI Knowledge: Integrated' : ''}
+⚡ Speed: ${elapsed}ms${isPSFullResponse ? ' | 🌟 Method: ' + (data.mergeMethod || 'Combined') : ''}
+${isPSFullResponse ? '<br>💙 Emotional Intelligence: Active | 🧠 Full AI Knowledge: Integrated' : ''}
 </div>
 </div>`;
-                    showStatus(`✅ Response received in ${(elapsed/1000).toFixed(2)}s! ${isSanityResponse ? '(All AIs collaborated)' : ''}`, 'success');
+                    showStatus(`✅ Response received in ${(elapsed/1000).toFixed(2)}s! ${isPSFullResponse ? '(All AIs collaborated)' : ''}`, 'success');
                     
                     console.log('📊 Response metadata:', {
                         provider: data.provider,
                         model: modelInfo,
                         tokens: data.usage?.totalTokens,
                         time: elapsed + 'ms',
-                        emotional: isSanityResponse
+                        emotional: isPSFullResponse
                     });
                 } else {
                     let errorMsg = data.error || 'Unknown error';
@@ -582,7 +582,7 @@ ${data.errorType === 'quota_exceeded' ? '<br><br>🔄 <strong>Try:</strong> Swit
         // Show helpful tip
         setTimeout(() => {
             if (!responseDiv.innerHTML) {
-                showStatus('💡 Tip: Select "Sanity AI" for the best experience - all AIs working together!', 'info');
+                showStatus('💡 Tip: Select "P.S-Full.AI" for the best experience - all AIs working together!', 'info');
             }
         }, 3000);
     </script>
