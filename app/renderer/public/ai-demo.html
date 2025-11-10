@@ -4,223 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P.S-Full.AI - Complete AI Intelligence System 🧠</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            min-height: 100vh;
-            color: #fff;
-            padding: 20px;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .main-header {
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        h1 { 
-            font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #fff, #f0f0f0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
-            50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-top: 10px;
-        }
-
-        .ai-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            background: rgba(102, 126, 234, 0.3);
-            border-radius: 20px;
-            margin: 5px;
-            font-size: 0.9em;
-        }
-        
-        .container { 
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.15);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            padding: 30px; 
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        
-        textarea { 
-            width: 100%; 
-            min-height: 120px; 
-            padding: 15px; 
-            background: rgba(255, 255, 255, 0.2);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            color: #fff; 
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            font-size: 16px; 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-            resize: vertical;
-        }
-
-        textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        button { 
-            padding: 15px 30px; 
-            font-size: 18px; 
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white; 
-            border: none; 
-            border-radius: 50px;
-            cursor: pointer; 
-            margin: 10px 5px 10px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:hover { 
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        button:disabled { 
-            background: #333;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .response { 
-            margin-top: 20px; 
-            padding: 20px; 
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            white-space: pre-wrap; 
-            border-left: 4px solid #667eea;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .status { 
-            padding: 10px 15px; 
-            border-radius: 10px;
-            margin: 10px 0; 
-            font-size: 14px;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-        }
-        
-        .status.success { background: rgba(6, 95, 70, 0.6); color: #6ee7b7; }
-        .status.error { background: rgba(127, 29, 29, 0.6); color: #fca5a5; }
-        .status.info { background: rgba(30, 58, 138, 0.6); color: #93c5fd; }
-        
-        select {
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            font-size: 16px;
-            margin: 10px 10px 10px 0;
-            cursor: pointer;
-        }
-
-        select option {
-            background: #1a1a1a;
-            color: #fff;
-        }
-        
-        .meta {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 10px;
-        }
-
-        label {
-            display: block;
-            margin: 15px 0 5px 0;
-            font-weight: 600;
-        }
-
-        .knowledge-panel {
-            background: rgba(102, 126, 234, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .knowledge-panel h3 {
-            margin-bottom: 10px;
-        }
-
-        .knowledge-panel ul {
-            margin-left: 20px;
-            line-height: 1.8;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .container {
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="ai-demo.css">
 </head>
 <body>
     <div class="main-header">
@@ -228,7 +12,7 @@
         <p class="subtitle">Complete AI Intelligence System - Powered by ALL Major AI Providers</p>
         <div style="margin-top: 15px;">
             <span class="ai-badge">🤖 OpenAI GPT-4o</span>
-            <span class="ai-badge">🧠 Claude 3.5 Sonnet</span>
+            <span class="ai-badge">🧠 Anthropic Claude 3.5</span>
             <span class="ai-badge">✨ Gemini 2.0 Flash</span>
             <span class="ai-badge">💙 Emotional Intelligence</span>
         </div>
@@ -238,7 +22,7 @@
         <div class="knowledge-panel">
             <h3>🌟 What Makes P.S-Full.AI Different</h3>
             <ul>
-                <li><strong>31 AI Functions</strong> - All working together for you</li>
+                <li><strong>39+ AI Functions</strong> - All working together for you</li>
                 <li><strong>Emotional Intelligence</strong> - Understands and cares about your feelings</li>
                 <li><strong>Complete Memory</strong> - Remembers everything important (90%+ compression)</li>
                 <li><strong>Multi-AI Collaboration</strong> - OpenAI + Anthropic + Google combined</li>
@@ -256,7 +40,7 @@
             <option value="auto">⚡ Auto Select (First Available)</option>
             <option value="openai">🤖 OpenAI GPT-4o (Powerful & Creative)</option>
             <option value="anthropic">🧠 Anthropic Claude 3.5 (Thoughtful & Precise)</option>
-            <option value="gemini">✨ Google Gemini 2.0 (Fast & Multimodal)</option>
+            <option value="gemini">✨ Google Gemini 2.0 Flash (Fast & Multimodal)</option>
         </select>
         
         <label for="model">⚙️ Advanced Model Selection (Optional):</label>
@@ -269,7 +53,7 @@
                 <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fastest)</option>
             </optgroup>
             <optgroup label="Anthropic Models">
-                <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet ⭐ (Best Reasoning)</option>
+                <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet ⭐ (Best Reasoning)</option>
                 <option value="claude-3-opus-20240229">Claude 3 Opus (Most Capable)</option>
                 <option value="claude-3-haiku-20240307">Claude 3 Haiku (Fastest)</option>
             </optgroup>
@@ -288,13 +72,55 @@ Try:
 • 'Help me overcome anxiety'
 • 'Create a business plan for...'
 • 'Write code for...'
-• 'What's the meaning of life?'">How can AI help me become my best self?</textarea>
+• 'What's the meaning of life?'"></textarea>
         
-        <button id="sendBtn">🚀 Send to AI</button>
-        <button id="healthBtn">🏥 System Health</button>
-        <button id="clearBtn">🗑️ Clear</button>
-        
+        <div class="button-group">
+            <button id="sendBtn">🚀 Send to AI</button>
+            <button id="healthBtn">🏥 System Health</button>
+            <a href="settings.html" style="text-decoration: none;">
+                <button type="button" class="toggle-button">⚙️ Settings</button>
+            </a>
+            <button id="clearBtn">🗑️ Clear</button>
+            <button id="alwaysOnTopBtn" class="toggle-button">📌 Always on Top: OFF</button> 
+        </div>
         <div id="response"></div>
+
+        <!-- System Health & Prediction Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div id="dashboard-overall" class="dashboard-card">
+                <h3>Overall Status</h3>
+                <p id="dash-status">N/A</p>
+            </div>
+            <div id="dashboard-metrics" class="dashboard-card">
+                <h3>Core Metrics</h3>
+                <p id="dash-functions">Functions: N/A</p>
+                <p id="dash-endpoints">Endpoints: N/A</p>
+                <p id="dash-checktime">Check Time: N/A</p>
+            </div>
+            <div id="dashboard-evolution" class="dashboard-card">
+                <h3>🧬 Evolution Systems</h3>
+                <p id="dash-miner-status">Knowledge Miner: Checking...</p>
+                <p id="dash-sandbox-status">AI Sandbox: Checking...</p>
+            </div>
+            <div id="dashboard-predictions" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>🔮 Predictive Analysis</h3>
+                <ul id="dash-predictions-list"><li>Checking...</li></ul>
+            </div>
+            <div id="dashboard-allocations" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>🚀 Dynamic Resource Allocations</h3>
+                <ul id="dash-allocations-list"><li>None</li></ul>
+            </div>
+            <div id="dashboard-issues" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>⚠️ Active Issues & Fixes</h3>
+                <p><strong>Issues:</strong> <span id="dash-issues-list">None</span></p>
+                <p><strong>Fixes Attempted:</strong> <span id="dash-fixes-list">None</span></p>
+            </div>
+             <div id="dashboard-ai-summary" class="dashboard-card" style="grid-column: 1 / -1; background: rgba(102, 126, 234, 0.2);">
+                <h3>🧠 AI-Generated Summary</h3>
+                <p id="dash-ai-summary-text">Awaiting health data...</p>
+            </div>
+        </div>
+
     </div>
 
     <div class="container">
@@ -337,256 +163,6 @@ Try:
         </div>
     </div>
 
-    <script type="module">
-        const sendBtn = document.getElementById('sendBtn');
-        const healthBtn = document.getElementById('healthBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const promptInput = document.getElementById('prompt');
-        const providerSelect = document.getElementById('provider');
-        const modelSelect = document.getElementById('model');
-        const responseDiv = document.getElementById('response');
-        const statusDiv = document.getElementById('status');
-
-        // P.S-Full.AI Knowledge Base - Everything AI knows
-        const AI_KNOWLEDGE = {
-            totalFunctions: 31,
-            aiProviders: ['OpenAI GPT-4o', 'Anthropic Claude 3.5', 'Google Gemini 2.0'],
-            capabilities: [
-                'Text generation & analysis',
-                'Image analysis & vision',
-                'Audio transcription',
-                'Code analysis & optimization',
-                'Autonomous agents',
-                'Workflow automation',
-                'Advanced analytics',
-                'Security defense',
-                'Threat intelligence',
-                'Emotional intelligence',
-                'Memory systems',
-                'Multimodal AI',
-                'Real-time collaboration'
-            ],
-            emotionalFeatures: [
-                'Mood detection (happy, sad, anxious, stressed)',
-                'Caring contextual responses',
-                'Proactive check-ins (morning/afternoon/evening)',
-                'Memory compression (90%+ efficiency)',
-                'Reminder auto-extraction',
-                'Relationship strength tracking',
-                'Achievement celebration'
-            ]
-        };
-
-        // Show AI knowledge on load
-        window.addEventListener('load', () => {
-            checkHealth();
-            console.log('🧠 P.S-Full.AI Knowledge Base:', AI_KNOWLEDGE);
-            console.log('💙 Emotional Intelligence: ACTIVE');
-            console.log('🌐 AI Collaboration Network: READY');
-        });
-
-        async function checkHealth() {
-            showStatus('🔍 Checking AI system health...', 'info');
-            try {
-                const response = await fetch('/.netlify/functions/ai-health');
-                const data = await response.json();
-                
-                const providers = Object.entries(data.providers)
-                    .map(([name, available]) => `${available ? '✅' : '❌'} ${name}`)
-                    .join(', ');
-                
-                const aiCount = Object.values(data.providers).filter(v => v).length;
-                
-                showStatus(`✨ System Status: ${data.status.toUpperCase()} | ${aiCount} AI providers ready | ${providers}`, 'success');
-                console.log('🏥 Health Check:', data);
-            } catch (error) {
-                showStatus('⚠️ Backend offline. Functions may not work. Try deploying to Netlify.', 'error');
-                console.error('Health check failed:', error);
-            }
-        }
-
-        healthBtn.onclick = checkHealth;
-        clearBtn.onclick = () => {
-            responseDiv.innerHTML = '';
-            showStatus('🗑️ Cleared!', 'info');
-        };
-
-        sendBtn.onclick = async () => {
-            const prompt = promptInput.value.trim();
-            if (!prompt) {
-                showStatus('💭 Please enter a message', 'error');
-                return;
-            }
-
-            sendBtn.disabled = true;
-            sendBtn.textContent = '🧠 AI is thinking...';
-            responseDiv.innerHTML = '';
-            showStatus('📡 Connecting to AI network...', 'info');
-
-            try {
-                const startTime = Date.now();
-                
-                // Use P.S-Full.AI for best results
-                const isPSFullAI = providerSelect.value === 'sanity';
-                const endpoint = isPSFullAI 
-                    ? '/.netlify/functions/sanity-ai'
-                    : '/.netlify/functions/ai-chat';
-                
-                const requestBody = isPSFullAI
-                    ? {
-                        prompt: prompt,
-                        temperature: 0.7,
-                        maxTokens: 2000,
-                        // P.S-Full.AI gets full context
-                        systemContext: `You are P.S-Full.AI - the complete AI intelligence system with emotional awareness.
-                        
-You have access to ALL knowledge from:
-- OpenAI GPT-4o (creative, versatile)
-- Anthropic Claude 3.5 (thoughtful, precise)  
-- Google Gemini 2.0 (fast, multimodal)
-
-Your unique features:
-- Emotional intelligence (detect mood, respond with care)
-- Complete memory (remember everything important)
-- Proactive caring (check in, remind, celebrate)
-- 31 AI functions working together
-- Beautiful, fast, helpful
-
-Always be:
-- Caring and supportive (not robotic)
-- Helpful and accurate
-- Creative when asked
-- Encouraging and positive
-- Honest about limitations
-
-Remember: You're not just answering questions - you're building a relationship.`
-                      }
-                    : {
-                        provider: providerSelect.value,
-                        prompt: prompt,
-                        model: modelSelect.value || undefined,
-                        temperature: 0.7,
-                        maxTokens: 2000
-                      };
-                
-                showStatus('💭 AI is processing your message...', 'info');
-                
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                const data = await response.json();
-                const elapsed = Date.now() - startTime;
-
-                if (data.success) {
-                    const isPSFullResponse = data.provider === 'sanity_ai';
-                    const modelInfo = isPSFullResponse 
-                        ? `${data.aiCount || 'Multiple'} AIs (${data.contributors?.join(', ') || 'Combined'})` 
-                        : data.model;
-                    
-                    const aiIcon = isPSFullResponse ? '🧠' : 
-                                 data.provider === 'openai' ? '🤖' :
-                                 data.provider === 'anthropic' ? '🧠' : '✨';
-                    
-                    responseDiv.innerHTML = `
-<div class="response">
-<strong>${aiIcon} ${isPSFullResponse ? 'P.S-Full.AI' : data.provider.toUpperCase()} Response:</strong><br><br>
-${formatResponse(data.content)}
-<div class="meta">
-🤖 Provider: ${data.provider} | 
-⚙️ Model: ${modelInfo} | 
-📊 Tokens: ${data.usage?.totalTokens || 'N/A'} | 
-⚡ Speed: ${elapsed}ms${isPSFullResponse ? ' | 🌟 Method: ' + (data.mergeMethod || 'Combined') : ''}
-${isPSFullResponse ? '<br>💙 Emotional Intelligence: Active | 🧠 Full AI Knowledge: Integrated' : ''}
-</div>
-</div>`;
-                    showStatus(`✅ Response received in ${(elapsed/1000).toFixed(2)}s! ${isPSFullResponse ? '(All AIs collaborated)' : ''}`, 'success');
-                    
-                    console.log('📊 Response metadata:', {
-                        provider: data.provider,
-                        model: modelInfo,
-                        tokens: data.usage?.totalTokens,
-                        time: elapsed + 'ms',
-                        emotional: isPSFullResponse
-                    });
-                } else {
-                    let errorMsg = data.error || 'Unknown error';
-                    let hint = data.hint || '';
-                    
-                    responseDiv.innerHTML = `
-<div class="response" style="border-color: #ef4444;">
-❌ <strong>Error:</strong> ${errorMsg}
-${hint ? '<br><br>💡 <strong>Suggestion:</strong> ' + hint : ''}
-${data.errorType === 'quota_exceeded' ? '<br><br>🔄 <strong>Try:</strong> Switch to another AI provider above' : ''}
-</div>`;
-                    
-                    if (data.errorType === 'quota_exceeded') {
-                        showStatus('⚠️ Quota limit reached - try another AI provider', 'error');
-                    } else {
-                        showStatus('❌ Failed to get response', 'error');
-                    }
-                    
-                    console.error('❌ AI Error:', data);
-                }
-            } catch (error) {
-                responseDiv.innerHTML = `
-<div class="response" style="border-color: #ef4444;">
-❌ <strong>Network Error:</strong> ${error.message}<br><br>
-💡 <strong>Possible causes:</strong>
-<ul style="margin-left: 20px; margin-top: 10px;">
-<li>Serverless functions not deployed yet</li>
-<li>API keys not configured in Netlify</li>
-<li>Network connection issue</li>
-</ul>
-<br>
-<strong>Next steps:</strong>
-<ol style="margin-left: 20px; margin-top: 10px;">
-<li>Deploy to Netlify: <code>git push origin main</code></li>
-<li>Configure API keys in Netlify dashboard</li>
-<li>Wait 2-3 minutes for deployment</li>
-<li>Try again</li>
-</ol>
-</div>`;
-                showStatus('🔌 Connection failed - check console for details', 'error');
-                console.error('💥 Network error:', error);
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.textContent = '🚀 Send to AI';
-            }
-        };
-
-        function formatResponse(text) {
-            // Format markdown-style text for better readability
-            return text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/`(.*?)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">$1</code>')
-                .replace(/\n\n/g, '<br><br>')
-                .replace(/\n/g, '<br>');
-        }
-
-        function showStatus(message, type) {
-            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
-        }
-
-        // Allow Enter to submit (Shift+Enter for new line)
-        promptInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendBtn.click();
-            }
-        });
-
-        // Show helpful tip
-        setTimeout(() => {
-            if (!responseDiv.innerHTML) {
-                showStatus('💡 Tip: Select "P.S-Full.AI" for the best experience - all AIs working together!', 'info');
-            }
-        }, 3000);
-    </script>
+    <script type="module" src="../src/ai-demo.ts"></script>
 </body>
 </html>
-
-

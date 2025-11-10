@@ -23,6 +23,7 @@ interface DailyReport {
   recommendations: string[];
   timesSaved: number; // minutes
   issuesFixed: number;
+  experimentsConducted: number;
 }
 
 interface SystemCheck {
@@ -40,33 +41,59 @@ interface SystemCheck {
  */
 class BackgroundMonitor {
   private checkInterval: number = 5 * 60 * 1000; // 5 minutes
-  private reportTime: string = '20:00'; // 8 PM daily report
-  private timerId: NodeJS.Timeout | null = null;
+  private reportCheckInterval: number = 60 * 60 * 1000; // 1 hour
+  private knowledgeCheckInterval: number = 30 * 60 * 1000; // 30 minutes
+  private timers: NodeJS.Timeout[] = [];
   private dailyStats: Map<string, DailyReport> = new Map();
+  private userConfigs: Map<string, { reportTime: string; email?: string; phoneNumber?: string; notifications: any }> = new Map();
 
   start(): void {
     console.log('🔄 Background monitor started');
     
     // System checks every 5 minutes
-    this.timerId = setInterval(() => {
+    this.timers.push(setInterval(() => {
       this.performSystemCheck();
-    }, this.checkInterval);
+    }, this.checkInterval));
 
     // Daily report check every hour
-    setInterval(() => {
+    this.timers.push(setInterval(() => {
       this.checkDailyReport();
-    }, 60 * 60 * 1000);
+    }, this.reportCheckInterval));
 
     // Auto-learning check every 30 minutes
-    setInterval(() => {
+    this.timers.push(setInterval(() => {
       this.checkForNewKnowledge();
-    }, 30 * 60 * 1000);
+    }, this.knowledgeCheckInterval));
+
+    // Initial fetch of user configurations
+    this.fetchUserConfigs();
   }
 
   stop(): void {
-    if (this.timerId) {
-      clearInterval(this.timerId);
-      this.timerId = null;
+    this.timers.forEach(clearInterval);
+    this.timers = [];
+    console.log('🛑 Background monitor stopped');
+  }
+
+  /**
+   * Fetch user configurations for daily reports.
+   * In a real app, this would fetch configs for the logged-in user.
+   */
+  private async fetchUserConfigs(userId: string = 'default'): Promise<void> {
+    const SETTINGS_KEY = `ps_full_ai_settings_${userId}`;
+    const savedSettings = localStorage.getItem(SETTINGS_KEY);
+
+    if (savedSettings) {
+      try {
+        const settings = JSON.parse(savedSettings);
+        this.userConfigs.set(userId, settings);
+        console.log(`⚙️ Loaded configuration for user: ${userId} from local storage.`);
+      } catch (e) {
+        console.error('Failed to load user config, using defaults.', e);
+        this.setDefaultConfig(userId);
+      }
+    } else {
+      this.setDefaultConfig(userId);
     }
   }
 
@@ -95,6 +122,16 @@ class BackgroundMonitor {
         check.functionsWorking = healthData.health?.functions?.working || 0;
         check.endpointsAlive = Object.values(healthData.health?.endpoints || {})
           .filter(v => v).length;
+        
+        // Log predictive insights
+        if (healthData.health?.predictions) {
+          console.log('🔮 Predictive Health Analysis:', healthData.health.predictions);
+        }
+
+        // Log dynamic resource allocation actions
+        if (healthData.health?.allocations && healthData.health.allocations.length > 0) {
+          console.log('🚀 Dynamic Resource Allocation:', healthData.health.allocations);
+        }
       }
 
       // Check memory usage (if available)
@@ -119,9 +156,13 @@ class BackgroundMonitor {
   private async checkDailyReport(): Promise<void> {
     const now = new Date();
     const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    
-    if (currentTime === this.reportTime) {
-      await this.sendDailyReport('default'); // Replace with actual userId
+
+    for (const [userId, config] of this.userConfigs.entries()) {
+      // Check if it's time for this user's report and if they have any stats for today
+      if (currentTime === config.reportTime && this.dailyStats.has(userId)) {
+        console.log(`🕒 It's time to send a daily report for user ${userId}`);
+        await this.sendDailyReport(userId);
+      }
     }
   }
 
@@ -129,19 +170,21 @@ class BackgroundMonitor {
    * Generate and send daily progress report
    */
   async sendDailyReport(userId: string): Promise<void> {
-    const report = this.dailyStats.get(userId) || this.createEmptyReport(userId);
+    const report = this.getOrCreateDailyStats(userId);
+    const config = this.userConfigs.get(userId);
 
     try {
       // Send via notification
       await this.sendNotification(userId, report);
 
       // Send via email/SMS (if configured)
-      await fetch('/.netlify/functions/email-notifications', {
+      await fetch('/.netlify/functions/background-monitor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'send_daily_report',
           userId,
+          config, // Pass user-specific config
           report
         })
       });
@@ -194,30 +237,29 @@ System Health: ${report.systemHealth}`;
   }
 
   /**
+   * Gets the daily stats for a user, creating a new report if one doesn't exist.
+   */
+  private getOrCreateDailyStats(userId: string): DailyReport {
+    if (!this.dailyStats.has(userId)) {
+      this.dailyStats.set(userId, this.createEmptyReport(userId));
+    }
+    return this.dailyStats.get(userId)!;
+  }
+
+  /**
    * Track conversation
    */
   trackConversation(userId: string): void {
-    const report = this.dailyStats.get(userId) || this.createEmptyReport(userId);
+    const report = this.getOrCreateDailyStats(userId);
     report.conversationsToday++;
-    this.dailyStats.set(userId, report);
   }
 
   /**
    * Track completed task
    */
   trackTask(userId: string, task: string): void {
-    const report = this.dailyStats.get(userId) || this.createEmptyReport(userId);
+    const report = this.getOrCreateDailyStats(userId);
     report.tasksCompleted.push(task);
-    this.dailyStats.set(userId, report);
-  }
-
-  /**
-   * Track learned knowledge
-   */
-  trackKnowledge(userId: string, knowledge: string): void {
-    const report = this.dailyStats.get(userId) || this.createEmptyReport(userId);
-    report.knowledgeLearned.push(knowledge);
-    this.dailyStats.set(userId, report);
   }
 
   /**
@@ -226,25 +268,32 @@ System Health: ${report.systemHealth}`;
   private async checkForNewKnowledge(): Promise<void> {
     console.log('🧠 Checking for new knowledge to learn...');
 
+    // Phase 1: Mine for new external knowledge
     try {
-      // Check for trending topics
-      const response = await fetch('/.netlify/functions/ai-memory', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'get_insights',
-          timeframe: 'today'
-        })
-      });
+      const response = await fetch('/.netlify/functions/knowledge-miner');
 
       if (response.ok) {
         const data = await response.json();
-        
+        if (data.success && data.insight) {
+          console.log(`⛏️ Knowledge Miner found something new: ${data.insight.topic}`);
+          await this.incorporateKnowledge(data.insight);
+        }
+      }
+    } catch (error) {
+      console.error('Knowledge mining failed:', error);
+    }
+
+    // Phase 2: Analyze internal data for insights (existing logic)
+    try {
+      const response = await fetch('/.netlify/functions/ai-memory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'get_insights', timeframe: 'today' })
+      });
+      if (response.ok) {
+        const data = await response.json();
         if (data.insights && data.insights.length > 0) {
-          // Learn new patterns
-          for (const insight of data.insights) {
-            await this.incorporateKnowledge(insight);
-          }
+          for (const insight of data.insights) await this.incorporateKnowledge(insight);
         }
       }
     } catch (error) {
@@ -253,17 +302,65 @@ System Health: ${report.systemHealth}`;
   }
 
   /**
+   * Runs an experiment on a new piece of knowledge in a safe sandbox.
+   */
+  private async runExperiment(insight: any): Promise<any> {
+    console.log(`🔬 Running experiment for: ${insight.topic}`);
+    const report = this.getOrCreateDailyStats('default');
+    report.experimentsConducted++;
+
+    try {
+      const response = await fetch('/.netlify/functions/ai-sandbox', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ experiment: { insight } })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          console.log(`✅ Experiment Result: ${data.result.verdict} - ${data.result.message}`);
+          return data.result;
+        }
+      }
+    } catch (error) {
+      console.error('Sandbox experiment failed:', error);
+    }
+    return null;
+  }
+
+  /**
    * Incorporate new knowledge into AI
    */
   private async incorporateKnowledge(insight: any): Promise<void> {
     console.log('📚 Learning new knowledge:', insight);
+    const userId = 'default'; // Or determine user context if insight is user-specific
+
+    let experimentResult = null;
+    if (insight.isExperimental) {
+      experimentResult = await this.runExperiment(insight);
+      // Only proceed with verified, successful experiments
+      if (!experimentResult || experimentResult.verdict !== 'SUCCESS') {
+        console.log(`Skipping integration of '${insight.topic}' due to unsuccessful experiment.`);
+        return;
+      }
+    }
 
     // Save to knowledge base
     await offlineStorage.saveKnowledge(
       insight.topic || 'general',
       insight.content,
-      insight.importance || 50
+      insight.importance || 50,
+      experimentResult // Attach experiment results if they exist
     );
+
+    // Track that knowledge was learned for the daily report
+    const report = this.getOrCreateDailyStats(userId);
+    let knowledgeEntry = insight.topic || 'A new pattern';
+    if (experimentResult) {
+      knowledgeEntry += ` (Verified: ${experimentResult.metrics?.performanceGain || 'Success'})`;
+    }
+    report.knowledgeLearned.push(knowledgeEntry);
 
     // Update AI prompts library
     await fetch('/.netlify/functions/ai-prompts-library', {
@@ -290,8 +387,21 @@ System Health: ${report.systemHealth}`;
       aiImprovements: [],
       recommendations: [],
       timesSaved: 0,
-      issuesFixed: 0
+      issuesFixed: 0,
+      experimentsConducted: 0
     };
+  }
+
+  /**
+   * Sets a default configuration for a user if none is found.
+   */
+  private setDefaultConfig(userId: string): void {
+    const defaultConfig = {
+      reportTime: '20:00',
+      notifications: { email: true, sms: false, push: true }
+    };
+    this.userConfigs.set(userId, defaultConfig);
+    console.log(`⚙️ No saved configuration found for user ${userId}. Using defaults.`);
   }
 }
 

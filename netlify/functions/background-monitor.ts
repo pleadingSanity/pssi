@@ -73,6 +73,11 @@ export const handler: Handler = async (event) => {
         // Save monitoring configuration
         const monitorConfig: MonitorConfig = {
           userId,
+          // In a real app, you would save this config to a database (e.g., FaunaDB, Supabase)
+          // associated with the userId.
+          // For this example, we'll just return it.
+          // await db.collection('user_configs').doc(userId).set(config);
+
           phoneNumber: config.phoneNumber,
           email: config.email,
           reportTime: config.reportTime || '20:00',
@@ -167,12 +172,12 @@ System Health: ${report.systemHealth}
         `;
 
         // Send SMS (if configured)
-        if (config?.phoneNumber && config?.notifications?.sms) {
+        if (report && config?.phoneNumber && config?.notifications?.sms) {
           await sendSMS(config.phoneNumber, dailyMessage);
         }
 
         // Send Email (if configured)
-        if (config?.email && config?.notifications?.email) {
+        if (report && config?.email && config?.notifications?.email) {
           await sendEmail(config.email, '📊 Your P.S-Full.AI Daily Report', emailHTML);
         }
 
