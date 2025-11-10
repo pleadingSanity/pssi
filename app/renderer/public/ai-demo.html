@@ -81,6 +81,7 @@
         
         <label for="provider">Choose AI Provider:</label><br>
         <select id="provider">
+            <option value="sanity">🧠 Sanity AI (ALL AIs Combined - BEST!)</option>
             <option value="auto">Auto (First Available)</option>
             <option value="openai">OpenAI GPT-4o</option>
             <option value="anthropic">Anthropic Claude 3.5</option>
@@ -161,30 +162,49 @@
 
             try {
                 const startTime = Date.now();
-                const response = await fetch('/.netlify/functions/ai-chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+                
+                // Use Sanity AI endpoint if selected
+                const endpoint = providerSelect.value === 'sanity' 
+                    ? '/.netlify/functions/sanity-ai'
+                    : '/.netlify/functions/ai-chat';
+                
+                const requestBody = providerSelect.value === 'sanity'
+                    ? {
+                        prompt: prompt,
+                        temperature: 0.7,
+                        maxTokens: 1000
+                      }
+                    : {
                         provider: providerSelect.value,
                         prompt: prompt,
                         model: modelSelect.value || undefined,
                         temperature: 0.7,
                         maxTokens: 1000
-                    })
+                      };
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
                 });
 
                 const data = await response.json();
                 const elapsed = Date.now() - startTime;
 
                 if (data.success) {
+                    const isSanityAI = data.provider === 'sanity_ai';
+                    const modelInfo = isSanityAI 
+                        ? `${data.aiCount} AIs (${data.contributors.join(', ')})` 
+                        : data.model;
+                    
                     responseDiv.innerHTML = `
 <div class="response">
-<strong>🤖 AI Response:</strong><br><br>
-${data.content}
+<strong>${isSanityAI ? '🧠 Sanity AI Response:' : '🤖 AI Response:'}</strong><br><br>
+${data.content.replace(/\n/g, '<br>')}
 <div class="meta">
-Provider: ${data.provider} | Model: ${data.model} | 
+Provider: ${data.provider} | Model: ${modelInfo} | 
 Tokens: ${data.usage?.totalTokens || 'N/A'} | 
-Time: ${elapsed}ms
+Time: ${elapsed}ms${isSanityAI ? ' | Method: ' + data.mergeMethod : ''}
 </div>
 </div>`;
                     showStatus('✅ Response received!', 'success');
