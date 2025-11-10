@@ -23,6 +23,16 @@
   from = "/api/ai/health"
   to = "/.netlify/functions/ai-health"
   status = 200
+
+[[redirects]]
+  from = "/api/code/analyze"
+  to = "/.netlify/functions/code-analyzer"
+  status = 200
+
+[[redirects]]
+  from = "/api/code/monitor"
+  to = "/.netlify/functions/code-monitor"
+  status = 200
   
 [[redirects]]
   from = "/*"
