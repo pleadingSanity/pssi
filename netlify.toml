@@ -80,6 +80,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/ai/collaborate"
+  to = "/.netlify/functions/ai-collaboration"
+  status = 200
+
+[[redirects]]
   from = "/api/payment/*"
   to = "/.netlify/functions/stripe-payment/:splat"
   status = 200
