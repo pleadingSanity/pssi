@@ -164,9 +164,10 @@ async function performHealthCheck() {
     database: { status: 'healthy', connections: 'optimal' },
   };
 
-  const overall = Object.values(checks).every(check => 
-    typeof check.status === 'string' ? check.status === 'healthy' : true
-  );
+  // Check if all services are healthy
+  const overall = checks.frontend.status === 'healthy' && 
+                  checks.functions.status === 'healthy' &&
+                  checks.cdn.status === 'healthy';
 
   return {
     overall: overall ? 'healthy' : 'degraded',
