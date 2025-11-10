@@ -217,7 +217,8 @@
                     • Remember our conversation context<br>
                     • Monitor and optimize your code 24/7<br>
                     • Analyze performance and auto-fix issues<br>
-                    • Self-heal and continuously improve<br><br>
+                    • Self-heal and continuously improve<br>
+                    • <strong>Optimize Windows & Android systems (GOD MODE)</strong><br><br>
                     I'm running 24/7 keeping everything optimized. What would you like me to help you with?
                     <div class="message-meta">
                         <span>Sanity AI</span>
@@ -237,6 +238,8 @@
                 <div class="quick-action" onclick="scanRepo()">🛡️ Scan Repository</div>
                 <div class="quick-action" onclick="checkPerformance()">⚡ Check Performance</div>
                 <div class="quick-action" onclick="runOptimizer()">🚀 Optimize Now</div>
+                <div class="quick-action" onclick="optimizeWindows()">🪟 Optimize Windows</div>
+                <div class="quick-action" onclick="optimizeAndroid()">📱 Optimize Android</div>
             </div>
             <div class="input-wrapper">
                 <textarea 
@@ -443,6 +446,98 @@
                     addMessage(message, 'ai', 'AI Optimizer');
                 } else {
                     addMessage('✅ System already fully optimized!', 'ai', 'Optimizer');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeWindows() {
+            addMessage('🪟 Running Windows optimization analysis...', 'ai', 'System Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/system-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ platform: 'windows', action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.optimizations) {
+                    let message = `🪟 **Windows Optimization Plan**\n\n`;
+                    message += `Expected Improvement: ${data.estimatedImprovement}\n\n`;
+                    
+                    const categories = ['critical', 'performance', 'memory', 'security', 'cleanup'];
+                    categories.forEach(cat => {
+                        const opts = data.optimizations.filter(o => o.category === cat);
+                        if (opts.length > 0) {
+                            message += `### ${cat.toUpperCase()}\n`;
+                            opts.forEach((opt, i) => {
+                                const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                                message += `${impact} **${opt.name}** (Impact: ${opt.impact})\n`;
+                                message += `   Why: ${opt.benefit}\n`;
+                                message += `   Steps:\n`;
+                                if (Array.isArray(opt.steps)) {
+                                    opt.steps.forEach((step, j) => message += `   ${j+1}. ${step}\n`);
+                                }
+                                message += `   Risk: ${opt.risk}\n\n`;
+                            });
+                        }
+                    });
+                    
+                    message += `\n💡 Run these optimizations in PowerShell (as Administrator) for best results!`;
+                    addMessage(message, 'ai', 'Windows Optimizer');
+                } else {
+                    addMessage(data.analysis || 'Optimization complete!', 'ai', 'System Optimizer');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeAndroid() {
+            addMessage('📱 Running Android optimization analysis...', 'ai', 'System Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/system-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ platform: 'android', action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.optimizations) {
+                    let message = `📱 **Android Optimization Plan**\n\n`;
+                    message += `Expected Improvement: ${data.estimatedImprovement}\n\n`;
+                    
+                    const categories = ['critical', 'performance', 'battery', 'memory', 'cleanup'];
+                    categories.forEach(cat => {
+                        const opts = data.optimizations.filter(o => o.category === cat);
+                        if (opts.length > 0) {
+                            message += `### ${cat.toUpperCase()}\n`;
+                            opts.forEach((opt, i) => {
+                                const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                                message += `${impact} **${opt.name}** (Impact: ${opt.impact})\n`;
+                                message += `   Why: ${opt.benefit}\n`;
+                                message += `   Steps:\n`;
+                                if (Array.isArray(opt.steps)) {
+                                    opt.steps.forEach((step, j) => message += `   ${j+1}. ${step}\n`);
+                                }
+                                message += `   Risk: ${opt.risk}\n\n`;
+                            });
+                        }
+                    });
+                    
+                    message += `\n💡 Some optimizations require Developer Options or ADB!`;
+                    addMessage(message, 'ai', 'Android Optimizer');
+                } else {
+                    addMessage(data.analysis || 'Optimization complete!', 'ai', 'System Optimizer');
                 }
             } catch (error) {
                 removeThinking(thinkingId);

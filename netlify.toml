@@ -43,6 +43,11 @@
   from = "/api/optimize"
   to = "/.netlify/functions/auto-optimizer"
   status = 200
+
+[[redirects]]
+  from = "/api/system/optimize"
+  to = "/.netlify/functions/system-optimizer"
+  status = 200
   
 [[redirects]]
   from = "/*"
