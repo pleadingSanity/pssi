@@ -165,6 +165,21 @@
   status = 200
 
 [[redirects]]
+  from = "/api/repo/*"
+  to = "/.netlify/functions/repo-scanner"
+  status = 200
+
+[[redirects]]
+  from = "/api/chat/optimized"
+  to = "/.netlify/functions/zero-memory-chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/deploy/*"
+  to = "/.netlify/functions/universal-deploy"
+  status = 200
+
+[[redirects]]
   from = "/api/status"
   to = "/.netlify/functions/live-status"
   status = 200
