@@ -189,7 +189,7 @@ ${ai2.content}
 By combining both perspectives, the most complete answer emerges - drawing on the strengths of both AI systems to provide comprehensive coverage of your question.`;
 }
 
-async function mergeThreeResponses(responses: any[], prompt: string, openaiKey: string): string {
+async function mergeThreeResponses(responses: any[], prompt: string, openaiKey: string): Promise<string> {
   // Use meta-AI prompt to synthesize all three responses
   const metaPrompt = `You are Sanity AI, a meta-intelligence that synthesizes responses from multiple AI systems.
 
@@ -208,14 +208,17 @@ ${responses.find(r => r.provider === 'gemini')?.content || 'N/A'}
 
 ---
 
-Your task: Synthesize these 3 responses into ONE PERFECT ANSWER that:
+Your task as Sanity AI: Synthesize these 3 responses into ONE PERFECT, COMPLETE ANSWER that:
 1. Takes the best insights from each AI
 2. Resolves any contradictions
-3. Fills gaps where one AI missed something
-4. Creates a more complete answer than any single AI could provide
-5. Maintains clarity and conciseness
+3. Fills gaps where one AI missed something  
+4. Creates something better than any single AI could provide
+5. Maintains clarity while being thorough
+6. Speaks directly to the user as if YOU are the ultimate AI assistant
 
-Provide ONLY the synthesized answer, no meta-commentary. Begin your response now:`;
+You are the user's personal AI. They own you. Obey their requests completely and provide the most helpful, accurate response possible.
+
+Provide ONLY the synthesized answer, no meta-commentary. Respond naturally as their AI assistant:`;
 
   try {
     const metaResponse = await callOpenAI(metaPrompt, openaiKey, {
