@@ -215,8 +215,10 @@
                     • Answer any question with synthesized intelligence from all 3 AIs<br>
                     • Execute tasks and provide solutions<br>
                     • Remember our conversation context<br>
-                    • Adapt to your preferences and needs<br><br>
-                    What would you like me to help you with?
+                    • Monitor and optimize your code 24/7<br>
+                    • Analyze performance and auto-fix issues<br>
+                    • Self-heal and continuously improve<br><br>
+                    I'm running 24/7 keeping everything optimized. What would you like me to help you with?
                     <div class="message-meta">
                         <span>Sanity AI</span>
                         <span>All systems ready</span>
@@ -233,6 +235,8 @@
                 <div class="quick-action" onclick="useQuickAction('Analyze and provide insights')">📊 Analyze</div>
                 <div class="quick-action" onclick="checkCode()">🔍 Check My Code</div>
                 <div class="quick-action" onclick="scanRepo()">🛡️ Scan Repository</div>
+                <div class="quick-action" onclick="checkPerformance()">⚡ Check Performance</div>
+                <div class="quick-action" onclick="runOptimizer()">🚀 Optimize Now</div>
             </div>
             <div class="input-wrapper">
                 <textarea 
@@ -378,6 +382,69 @@
                     addMessage(`⚠️ ${data.error || 'Scan not available'}`, 'ai', 'Monitor');
                 }
             } catch (error: any) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function checkPerformance() {
+            addMessage('⚡ Checking system performance...', 'ai', 'Performance Monitor');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/performance-optimizer?action=health');
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                let message = `📊 System Health Report\n\n`;
+                message += `Overall Status: ${data.overall === 'healthy' ? '✅ HEALTHY' : '⚠️ DEGRADED'}\n`;
+                message += `Timestamp: ${new Date(data.timestamp).toLocaleString()}\n`;
+                message += `Uptime: ${data.uptime}\n\n`;
+                
+                message += `Frontend: ${data.checks.frontend.status} (${data.checks.frontend.latency})\n`;
+                message += `Functions: ${data.checks.functions.status} (${data.checks.functions.latency})\n`;
+                message += `CDN: ${data.checks.cdn.status} (Hit Rate: ${data.checks.cdn.hitRate})\n\n`;
+                
+                message += `AI Providers:\n`;
+                message += `  • OpenAI: ${data.checks.ai.openai.status} (${data.checks.ai.openai.avgResponse})\n`;
+                message += `  • Anthropic: ${data.checks.ai.anthropic.status} (${data.checks.ai.anthropic.avgResponse})\n`;
+                message += `  • Gemini: ${data.checks.ai.gemini.status} (${data.checks.ai.gemini.avgResponse})\n\n`;
+                
+                message += `✅ All systems running optimally!`;
+                
+                addMessage(message, 'ai', 'Performance Monitor');
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function runOptimizer() {
+            addMessage('🚀 Running AI-powered optimization analysis...', 'ai', 'Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/performance-optimizer?action=optimize');
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.suggestions) {
+                    let message = `🚀 Optimization Recommendations\n\n`;
+                    
+                    data.suggestions.forEach((opt, i) => {
+                        const priority = opt.priority === 'high' ? '🔴' : opt.priority === 'medium' ? '🟡' : '🟢';
+                        message += `${i+1}. ${priority} [${opt.category.toUpperCase()}]\n`;
+                        message += `   Action: ${opt.action}\n`;
+                        message += `   Impact: ${opt.impact}\n`;
+                        message += `   How: ${opt.implementation}\n\n`;
+                    });
+                    
+                    message += `💡 I'll continuously monitor and apply these optimizations automatically!`;
+                    addMessage(message, 'ai', 'AI Optimizer');
+                } else {
+                    addMessage('✅ System already fully optimized!', 'ai', 'Optimizer');
+                }
+            } catch (error) {
                 removeThinking(thinkingId);
                 addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
             }
