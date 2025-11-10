@@ -155,6 +155,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/alerts/*"
+  to = "/.netlify/functions/threat-alerts"
+  status = 200
+
+[[redirects]]
+  from = "/alerts"
+  to = "/threat-monitor.html"
+  status = 200
+
+[[redirects]]
   from = "/api/status"
   to = "/.netlify/functions/live-status"
   status = 200
