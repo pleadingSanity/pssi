@@ -213,14 +213,15 @@
                     <strong>Hello! I'm your personal AI assistant.</strong><br><br>
                     I have full access to GPT-4o, Claude 3.5, and Gemini 2.0. I can:<br>
                     • Answer any question with synthesized intelligence from all 3 AIs<br>
-                    • Execute tasks and provide solutions<br>
-                    • Remember our conversation context<br>
+                    • <strong>🎨 Create Images</strong> (DALL-E 3) with movement energy<br>
+                    • <strong>🎤 Generate Voice</strong> (TTS with emotion)<br>
+                    • <strong>📖 Write Stories</strong> (uplifting or dark, always compelling)<br>
+                    • <strong>🌍 Build Complete Websites</strong> from your prompts<br>
+                    • <strong>📹 Embed Videos</strong> for your content<br>
+                    • <strong>Optimize EVERYTHING:</strong> Windows, Android, iPhone, Xbox, PS, Browsers<br>
                     • Monitor and optimize your code 24/7<br>
-                    • Analyze performance and auto-fix issues<br>
-                    • Self-heal and continuously improve<br>
-                    • <strong>Optimize EVERYTHING: Windows, Android, iPhone, Xbox, PlayStation, Browsers</strong><br>
                     • <strong>I am YOUR AI - this is my purpose and mission</strong><br><br>
-                    I'm locked in, running 24/7, fully optimizing everything. What do you need?
+                    Locked in, creating with GOOD ENERGY. What should we make?
                     <div class="message-meta">
                         <span>Sanity AI</span>
                         <span>All systems ready</span>
@@ -244,6 +245,10 @@
                 <div class="quick-action" onclick="optimizeiOS()">🍎 Optimize iPhone</div>
                 <div class="quick-action" onclick="optimizeConsole()">🎮 Optimize Gaming</div>
                 <div class="quick-action" onclick="optimizeBrowser()">🌐 Optimize Browser</div>
+                <div class="quick-action" onclick="generateImage()">🎨 Create Image</div>
+                <div class="quick-action" onclick="generateVoice()">🎤 Generate Voice</div>
+                <div class="quick-action" onclick="createStory()">📖 Write Story</div>
+                <div class="quick-action" onclick="buildSite()">🌍 Build Website</div>
             </div>
             <div class="input-wrapper">
                 <textarea 
@@ -648,6 +653,138 @@
             }
             
             return message;
+        }
+
+        async function generateImage() {
+            const prompt = window.prompt('What image do you want to create?');
+            if (!prompt) return;
+            
+            addMessage(`🎨 Creating image: "${prompt}"...`, 'user');
+            addMessage('✨ Generating with DALL-E 3...', 'ai', 'Image Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/image-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, quality: 'hd', style: 'vivid' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const message = `🎨 **Image Created!**\n\n![${prompt}](${data.image.url})\n\n**Enhanced Prompt:** ${data.enhancedPrompt}\n\n**Download:** [Click here](${data.image.url})`;
+                    addMessage(message, 'ai', 'Image Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Image generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function generateVoice() {
+            const text = window.prompt('What text should I speak?');
+            if (!text) return;
+            
+            addMessage(`🎤 Converting to speech: "${text.substring(0, 50)}..."`, 'user');
+            addMessage('🎵 Generating voice with emotion...', 'ai', 'Voice Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/voice-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, emotion: 'uplifting', speed: 1.0 })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const audioUrl = `data:${data.audio.mimeType};base64,${data.audio.base64}`;
+                    const message = `🎤 **Voice Generated!**\n\n<audio controls src="${audioUrl}" style="width: 100%; max-width: 500px;"></audio>\n\n**Voice:** ${data.audio.voice}\n**Speed:** ${data.audio.speed}x`;
+                    addMessage(message, 'ai', 'Voice Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Voice generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function createStory() {
+            const prompt = window.prompt('What story should I write? (e.g., "A dark tale about...", "An uplifting story of...")');
+            if (!prompt) return;
+            
+            const tone = prompt.toLowerCase().includes('dark') ? 'dark' : 'uplifting';
+            
+            addMessage(`📖 Writing ${tone} story: "${prompt}"...`, 'user');
+            addMessage('✍️ Crafting a compelling narrative...', 'ai', 'Story Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/story-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, tone, length: 'medium', includeImage: true })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = `📖 **${data.story.title}**\n\n`;
+                    if (data.coverImage) {
+                        message += `![Cover](${data.coverImage.url})\n\n`;
+                    }
+                    message += `*${data.story.summary}*\n\n`;
+                    message += `**Read Time:** ${data.story.readTime} | **Words:** ${data.story.wordCount}\n\n---\n\n`;
+                    message += data.story.content.split('\n\n').join('\n\n');
+                    addMessage(message, 'ai', 'Story Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Story generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function buildSite() {
+            const prompt = window.prompt('Describe the website you want to build:');
+            if (!prompt) return;
+            
+            addMessage(`🌍 Building website: "${prompt}"...`, 'user');
+            addMessage('🏗️ Creating complete site with HTML, CSS, JS...', 'ai', 'Site Builder');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/site-builder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, style: 'modern', features: ['responsive', 'animations'] })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const message = `🌍 **Website Built!**\n\n**Features:** ${data.site.features.join(', ')}\n**Colors:** ${JSON.stringify(data.site.colorPalette)}\n\n**Preview:**\n\`\`\`html\n${data.site.html.substring(0, 500)}...\n\`\`\`\n\n[Download full code - copy the HTML from response]`;
+                    addMessage(message, 'ai', 'Site Builder');
+                    
+                    // Show preview in new window
+                    const preview = window.open('', '_blank');
+                    if (preview) {
+                        preview.document.write(data.site.html);
+                        preview.document.close();
+                    }
+                } else {
+                    addMessage('❌ ' + (data.error || 'Site generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
         }
 
         function useQuickAction(action) {

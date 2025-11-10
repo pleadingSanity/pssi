@@ -63,6 +63,31 @@
   from = "/api/browser/optimize"
   to = "/.netlify/functions/browser-optimizer"
   status = 200
+
+[[redirects]]
+  from = "/api/create/image"
+  to = "/.netlify/functions/image-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/voice"
+  to = "/.netlify/functions/voice-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/story"
+  to = "/.netlify/functions/story-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/site"
+  to = "/.netlify/functions/site-builder"
+  status = 200
+
+[[redirects]]
+  from = "/api/embed/video"
+  to = "/.netlify/functions/video-embed"
+  status = 200
   
 [[redirects]]
   from = "/*"
