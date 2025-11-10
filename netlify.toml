@@ -80,6 +80,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/payment/*"
+  to = "/.netlify/functions/stripe-payment/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/usage/*"
+  to = "/.netlify/functions/usage-tracking/:splat"
+  status = 200
+
+[[redirects]]
   from = "/api/create/site"
   to = "/.netlify/functions/ultimate-web-builder"
   status = 200
