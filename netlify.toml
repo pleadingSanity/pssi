@@ -143,6 +143,26 @@
   from = "/api/analytics/*"
   to = "/.netlify/functions/analytics"
   status = 200
+
+[[redirects]]
+  from = "/api/security/*"
+  to = "/.netlify/functions/security-shield"
+  status = 200
+
+[[redirects]]
+  from = "/api/bounce/*"
+  to = "/.netlify/functions/bounce-back"
+  status = 200
+
+[[redirects]]
+  from = "/api/status"
+  to = "/.netlify/functions/live-status"
+  status = 200
+
+[[redirects]]
+  from = "/status"
+  to = "/.netlify/functions/live-status?action=html"
+  status = 200
   
 [[redirects]]
   from = "/*"
