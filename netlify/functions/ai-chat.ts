@@ -120,12 +120,29 @@ const handler: Handler = async (event: HandlerEvent) => {
 
   } catch (error) {
     console.error('AI request failed:', error);
+    
+    // Better error messages for common issues
+    let errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    let errorType = 'error';
+    
+    if (errorMessage.includes('quota') || errorMessage.includes('rate_limit')) {
+      errorType = 'quota_exceeded';
+      errorMessage = '⚠️ OpenAI quota exceeded. Try adding ANTHROPIC or GEMINI API keys as backup, or wait a bit and try again.';
+    } else if (errorMessage.includes('401') || errorMessage.includes('invalid')) {
+      errorType = 'invalid_key';
+      errorMessage = '🔑 API key is invalid or expired. Please check your Netlify environment variables.';
+    }
+    
     return {
-      statusCode: 500,
+      statusCode: error instanceof Error && errorMessage.includes('quota') ? 429 : 500,
       headers,
       body: JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: errorMessage,
+        errorType,
+        hint: errorType === 'quota_exceeded' 
+          ? 'Add backup AI providers: netlify env:set VITE_ANTHROPIC_API_KEY "your-key" or VITE_GEMINI_API_KEY "your-key"'
+          : 'Check your API keys in Netlify dashboard',
       }),
     };
   }

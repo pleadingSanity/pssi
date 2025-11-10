@@ -166,12 +166,24 @@ Time: ${elapsed}ms
 </div>`;
                     showStatus('✅ Response received!', 'success');
                 } else {
-                    responseDiv.innerHTML = `<div class="response" style="border-color: #ef4444;">❌ Error: ${data.error}</div>`;
-                    showStatus('Failed to get AI response', 'error');
+                    let errorMsg = data.error || 'Unknown error';
+                    let hint = data.hint || '';
+                    
+                    responseDiv.innerHTML = `
+<div class="response" style="border-color: #ef4444;">
+❌ Error: ${errorMsg}
+${hint ? '<br><br>💡 ' + hint : ''}
+</div>`;
+                    
+                    if (data.errorType === 'quota_exceeded') {
+                        showStatus('⚠️ Quota exceeded - try another provider or wait', 'error');
+                    } else {
+                        showStatus('Failed to get AI response', 'error');
+                    }
                 }
             } catch (error) {
-                responseDiv.innerHTML = `<div class="response" style="border-color: #ef4444;">❌ Error: ${error.message}</div>`;
-                showStatus('Request failed. Is the server running?', 'error');
+                responseDiv.innerHTML = `<div class="response" style="border-color: #ef4444;">❌ Network Error: ${error.message}<br><br>💡 Make sure the serverless functions are deployed</div>`;
+                showStatus('Request failed. Check console for details.', 'error');
             } finally {
                 sendBtn.disabled = false;
                 sendBtn.textContent = '🚀 Send to AI';
