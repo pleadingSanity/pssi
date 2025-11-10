@@ -87,6 +87,27 @@
             <option value="gemini">Google Gemini 2.0</option>
         </select><br>
         
+        <label for="model">Model (Optional):</label><br>
+        <select id="model">
+            <option value="">Default for Provider</option>
+            <optgroup label="OpenAI">
+                <option value="gpt-4o">GPT-4o (Best)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (Faster/Cheaper)</option>
+                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Cheapest)</option>
+            </optgroup>
+            <optgroup label="Anthropic">
+                <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet (Best)</option>
+                <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                <option value="claude-3-haiku-20240307">Claude 3 Haiku (Fastest)</option>
+            </optgroup>
+            <optgroup label="Google">
+                <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Best)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+            </optgroup>
+        </select><br>
+        
         <label for="prompt">Your Prompt:</label><br>
         <textarea id="prompt" placeholder="Ask me anything... Try: 'Explain quantum computing in simple terms'">Tell me a fascinating fact about the universe</textarea><br>
         
@@ -101,6 +122,7 @@
         const healthBtn = document.getElementById('healthBtn');
         const promptInput = document.getElementById('prompt');
         const providerSelect = document.getElementById('provider');
+        const modelSelect = document.getElementById('model');
         const responseDiv = document.getElementById('response');
         const statusDiv = document.getElementById('status');
 
@@ -145,6 +167,7 @@
                     body: JSON.stringify({
                         provider: providerSelect.value,
                         prompt: prompt,
+                        model: modelSelect.value || undefined,
                         temperature: 0.7,
                         maxTokens: 1000
                     })
