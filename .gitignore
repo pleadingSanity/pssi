@@ -63,3 +63,7 @@ coverage/
 *.bak
 *.tmp
 *.temp
+.vercel
+
+# Local Netlify folder
+.netlify
