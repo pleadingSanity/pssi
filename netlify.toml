@@ -215,6 +215,16 @@
   status = 200
 
 [[redirects]]
+  from = "/.netlify/functions/goal-tracker"
+  to = "/.netlify/functions/goal-tracker"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/real-time-data-feed"
+  to = "/.netlify/functions/real-time-data-feed"
+  status = 200
+
+[[redirects]]
   from = "/alliance"
   to = "/alliance.html"
   status = 200

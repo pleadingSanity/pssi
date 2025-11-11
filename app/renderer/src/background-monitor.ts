@@ -300,7 +300,19 @@ System Health: ${report.systemHealth}`;
     console.log('🧠 Checking for new knowledge to learn...');
 
     // Phase 1: Mine for new external knowledge
-    try {
+    try { // New: Fetch from real-time data feed
+      const response = await fetch('/.netlify/functions/real-time-data-feed');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.insight) {
+          console.log(`📰 Real-time feed found: ${data.insight.topic} from ${data.insight.source}`);
+          await this.incorporateKnowledge(data.insight);
+        }
+      }
+    } catch (error) {
+      console.error('Real-time data feed failed:', error);
+    }
+    try { // Old: Keep the original miner as a fallback
       const response = await fetch('/.netlify/functions/knowledge-miner');
 
       if (response.ok) {
