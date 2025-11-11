@@ -380,6 +380,35 @@ export const handler: Handler = async (event: HandlerEvent) => {
       };
     }
 
+    // GOAL MANAGEMENT
+    if (action === 'add_goal') {
+      const { goal } = request;
+      if (!goal) return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Goal text is required.' }) };
+      memory.profile.goals.push(goal);
+      return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
+    }
+
+    if (action === 'edit_goal') {
+      const { index, newGoal } = request;
+      if (typeof index !== 'number' || !newGoal) return { statusCode: 400, body: JSON.stringify({ error: 'Index and new goal text are required.' }) };
+      if (index >= 0 && index < memory.profile.goals.length) {
+        memory.profile.goals[index] = newGoal;
+        return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
+      }
+      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Invalid goal index.' }) };
+    }
+
+    if (action === 'delete_goal') {
+      const { index } = request;
+      if (typeof index !== 'number') return { statusCode: 400, body: JSON.stringify({ error: 'Index is required.' }) };
+      if (index >= 0 && index < memory.profile.goals.length) {
+        memory.profile.goals.splice(index, 1);
+        return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
+      }
+      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Invalid goal index.' }) };
+    }
+
+
     // GET MEMORY STATS
     if (action === 'stats') {
       const compressed = compressMemory(memory);
