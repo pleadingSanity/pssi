@@ -1,7 +1,7 @@
 {
-  "name": "P.S-Full.AI",
-  "short_name": "PSFullAI",
-  "description": "Complete AI Intelligence System - Works Offline",
+  "name": "P.S. AI App (P.S-Full.AI)",
+  "short_name": "P.S. AI",
+  "description": "The P.S. AI App is a complete intelligence system with emotional awareness, offline support, and multi-AI collaboration.",
   "start_url": "/ai-demo.html",
   "display": "standalone",
   "background_color": "#667eea",
