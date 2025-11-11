@@ -37,6 +37,8 @@
         <label for="provider">🤖 Choose Your AI Provider:</label>
         <select id="provider">
             <option value="sanity">🧠 P.S-Full.AI - ALL AIs Combined (RECOMMENDED!)</option>
+            <option value="live_council">🤝 Live AI Council (Collaborate)</option>
+            <option value="council">👑 AI Council - Collaborative Problem Solving</option>
             <option value="auto">⚡ Auto Select (First Available)</option>
             <option value="openai">🤖 OpenAI GPT-4o (Powerful & Creative)</option>
             <option value="anthropic">🧠 Anthropic Claude 3.5 (Thoughtful & Precise)</option>
@@ -84,6 +86,21 @@ Try:
             <button id="alwaysOnTopBtn" class="toggle-button">📌 Always on Top: OFF</button> 
         </div>
         <div id="response"></div>
+
+        <!-- Live Collaboration UI -->
+        <div id="live-collab-panel" style="display: none; margin-top: 20px;">
+            <h3>🤝 Live Collaboration Session</h3>
+            <div id="live-collab-join">
+                <p>Join or create a live session to solve problems with friends and the AI Council.</p>
+                <input type="text" id="live-username" placeholder="Enter your name..." style="width: 100%; margin-bottom: 10px;">
+                <button id="create-session-btn">Create New Session</button>
+            </div>
+            <div id="live-collab-active" style="display: none;">
+                <p><strong>Session Active!</strong> Share this link with your friends:</p>
+                <input type="text" id="invite-link" readonly style="width: 100%; margin-bottom: 10px;">
+                <button id="convene-council-btn">👑 Convene AI Council</button>
+            </div>
+        </div>
 
         <!-- System Health & Prediction Dashboard -->
         <div id="dashboard" class="dashboard">

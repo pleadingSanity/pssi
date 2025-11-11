@@ -190,6 +190,16 @@
   status = 200
   
 [[redirects]]
+  from = "/.netlify/functions/ai-council"
+  to = "/.netlify/functions/ai-council"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/live-collaboration"
+  to = "/.netlify/functions/live-collaboration"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
