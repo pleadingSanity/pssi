@@ -63,8 +63,15 @@ interface ProactiveMessage {
   emotionalIntent: string;
 }
 
-// In-memory storage (in production: use database)
-const userMemories = new Map<string, UserMemory>();
+// --- PERSISTENT STORAGE (CRITICAL UPGRADE) ---
+// Use Netlify's file system for persistent storage.
+import fs from 'fs/promises';
+import path from 'path';
+
+// In a real serverless environment, you'd use a managed database (Fauna, Supabase, etc.)
+// For Netlify Functions, we can use a temporary directory that persists between invocations.
+const MEMORY_PATH = path.join(process.env.LAMBDA_TASK_ROOT ? '/tmp' : __dirname, 'user_memories.json');
+let userMemories = new Map<string, UserMemory>();
 
 // Compress memory data
 function compressMemory(memory: UserMemory): string {
@@ -228,6 +235,22 @@ function generateCaringResponse(userMessage: string, memory: UserMemory): string
   return `I'm really glad you shared that with me, ${memory.profile.name}. I'm here to support you in any way I can. What would be most helpful for you right now? 💙`;
 }
 
+// --- MEMORY PERSISTENCE FUNCTIONS ---
+async function loadMemories(): Promise<void> {
+  try {
+    const data = await fs.readFile(MEMORY_PATH, 'utf-8');
+    const parsed = JSON.parse(data);
+    userMemories = new Map(Object.entries(parsed));
+    console.log(`🧠 Successfully loaded ${userMemories.size} user memories from persistent storage.`);
+  } catch (error) {
+    console.log('🧠 No persistent memory file found. Starting with a fresh memory map.');
+  }
+}
+
+async function saveMemories(): Promise<void> {
+  await fs.writeFile(MEMORY_PATH, JSON.stringify(Object.fromEntries(userMemories)), 'utf-8');
+}
+
 // Main handler
 export const handler: Handler = async (event: HandlerEvent) => {
   const corsHeaders = {
@@ -247,6 +270,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
       : {};
     const action = request.action || 'chat';
     const userId = request.userId || 'default_user';
+
+    // Load memories from persistent storage at the start of each invocation
+    await loadMemories();
 
     // Initialize or load user memory
     let memory = userMemories.get(userId);
@@ -313,6 +339,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
       memory.lastInteraction = new Date();
       memory.relationshipStrength = Math.min(100, memory.relationshipStrength + 1);
       
+      // Persist the updated memory
+      await saveMemories();
+
       // Keep only last 50 conversations (compress older ones)
       if (memory.conversations.length > 50) {
         memory.conversations = memory.conversations.slice(-50);
@@ -369,6 +398,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
       if (request.goals) memory.profile.goals = request.goals;
       if (request.preferences) memory.profile.preferences = request.preferences;
       
+      // Persist the updated memory
+      await saveMemories();
+
       return {
         statusCode: 200,
         headers: corsHeaders,
@@ -385,6 +417,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
       const { goal } = request;
       if (!goal) return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Goal text is required.' }) };
       memory.profile.goals.push(goal);
+      await saveMemories();
       return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
     }
 
@@ -393,6 +426,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
       if (typeof index !== 'number' || !newGoal) return { statusCode: 400, body: JSON.stringify({ error: 'Index and new goal text are required.' }) };
       if (index >= 0 && index < memory.profile.goals.length) {
         memory.profile.goals[index] = newGoal;
+        await saveMemories();
         return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
       }
       return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Invalid goal index.' }) };
@@ -403,6 +437,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
       if (typeof index !== 'number') return { statusCode: 400, body: JSON.stringify({ error: 'Index is required.' }) };
       if (index >= 0 && index < memory.profile.goals.length) {
         memory.profile.goals.splice(index, 1);
+        await saveMemories();
         return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, profile: memory.profile }) };
       }
       return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Invalid goal index.' }) };
