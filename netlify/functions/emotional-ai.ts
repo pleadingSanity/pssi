@@ -395,9 +395,10 @@ export const handler: Handler = async (event: HandlerEvent) => {
             relationshipStrength: memory.relationshipStrength,
             conversationsRemembered: memory.conversations.length,
             reminders: memory.reminders.length,
-            daysSinceFirstMeet: Math.floor((Date.now() - new Date(memory.conversations[0]?.date || Date.now()).getTime()) / (1000 * 60 * 60 * 24)),
+            daysSinceFirstMeet: memory.conversations.length > 0 ? Math.floor((Date.now() - new Date(memory.conversations[0].date).getTime()) / (1000 * 60 * 60 * 24)) : 0,
             memoryCompression: `${Math.round((1 - compressedSize / originalSize) * 100)}%`,
-            emotionalConnection: memory.emotions
+            emotionalConnection: memory.emotions,
+            profile: memory.profile
           }
         })
       };
