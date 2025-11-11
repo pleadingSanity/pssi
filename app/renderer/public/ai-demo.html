@@ -16,6 +16,7 @@
             <span class="ai-badge">✨ Gemini 2.0 Flash</span>
             <span class="ai-badge">💙 Emotional Intelligence</span>
             <span class="ai-badge">🤝 AI Alliance</span>
+            <span class="ai-badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">👑 GOD MODE</span>
         </div>
     </div>
     
@@ -103,6 +104,10 @@ Try:
                     <strong>Online Users:</strong>
                     <div id="online-users-list"></div>
                 </div>
+                <div id="voting-panel" style="display: none; margin-bottom: 10px;">
+                    <strong>Vote for the most helpful perspective:</strong>
+                    <p><small>The council has convened. Cast your vote!</small></p>
+                </div>
                 <button id="convene-council-btn">👑 Convene AI Council</button>
             </div>
         </div>
@@ -146,6 +151,18 @@ Try:
     </div>
 
     <div class="container">
+        <h2>🛡️ System Guardian</h2>
+        <p style="margin-bottom: 20px; opacity: 0.9;">
+            Your AI is constantly protecting and optimizing your system. You can also trigger manual scans here to ensure peak performance and security.
+        </p>
+        <div class="button-group">
+            <button id="optimizeBtn" class="toggle-button">⚡ Optimize System</button>
+            <button id="secureBtn" class="toggle-button">🔒 Secure System</button>
+        </div>
+        <div id="guardian-response" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="container">
         <h2>🎯 What Can P.S-Full.AI Do?</h2>
         <div class="knowledge-panel">
             <h3>🧠 Core Capabilities</h3>
@@ -185,6 +202,8 @@ Try:
         </div>
     </div>
 
+    <!-- 👑 GOD AI INTERFACE - ULTIMATE POWER -->
+    <script src="god-ai-interface.js"></script>
     <script type="module" src="../src/ai-demo.ts"></script>
 </body>
 </html>
