@@ -43,36 +43,62 @@ class BackgroundMonitor {
   private checkInterval: number = 5 * 60 * 1000; // 5 minutes
   private reportCheckInterval: number = 60 * 60 * 1000; // 1 hour
   private knowledgeCheckInterval: number = 30 * 60 * 1000; // 30 minutes
-  private timers: NodeJS.Timeout[] = [];
+  private timers: number[] = [];
   private dailyStats: Map<string, DailyReport> = new Map();
   private userConfigs: Map<string, { reportTime: string; email?: string; phoneNumber?: string; notifications: any }> = new Map();
+  private readonly MAX_DAILY_STATS = 10; // Limit stored daily stats to prevent memory growth
+  private readonly MAX_TASK_HISTORY = 50; // Limit tasks per user
+  private readonly MAX_KNOWLEDGE_HISTORY = 100; // Limit learned items per user
 
   start(): void {
     console.log('🔄 Background monitor started');
     
     // System checks every 5 minutes
-    this.timers.push(setInterval(() => {
+    this.timers.push(window.setInterval(() => {
       this.performSystemCheck();
     }, this.checkInterval));
 
     // Daily report check every hour
-    this.timers.push(setInterval(() => {
+    this.timers.push(window.setInterval(() => {
       this.checkDailyReport();
     }, this.reportCheckInterval));
 
     // Auto-learning check every 30 minutes
-    this.timers.push(setInterval(() => {
+    this.timers.push(window.setInterval(() => {
       this.checkForNewKnowledge();
     }, this.knowledgeCheckInterval));
+
+    // Clean old data every 24 hours
+    this.timers.push(window.setInterval(() => {
+      offlineStorage.cleanOldData(30);
+      this.pruneOldStats();
+    }, 24 * 60 * 60 * 1000));
 
     // Initial fetch of user configurations
     this.fetchUserConfigs();
   }
 
   stop(): void {
-    this.timers.forEach(clearInterval);
+    this.timers.forEach(timer => window.clearInterval(timer));
     this.timers = [];
     console.log('🛑 Background monitor stopped');
+  }
+
+  /**
+   * Prune old daily stats to prevent memory growth
+   */
+  private pruneOldStats(): void {
+    if (this.dailyStats.size > this.MAX_DAILY_STATS) {
+      const sortedKeys = Array.from(this.dailyStats.entries())
+        .sort((a, b) => new Date(a[1].date).getTime() - new Date(b[1].date).getTime())
+        .map(([key]) => key);
+      
+      // Remove oldest entries
+      const toRemove = sortedKeys.slice(0, sortedKeys.length - this.MAX_DAILY_STATS);
+      toRemove.forEach(key => this.dailyStats.delete(key));
+      
+      console.log(`🧹 Pruned ${toRemove.length} old daily stats from memory`);
+    }
   }
 
   /**
@@ -260,6 +286,11 @@ System Health: ${report.systemHealth}`;
   trackTask(userId: string, task: string): void {
     const report = this.getOrCreateDailyStats(userId);
     report.tasksCompleted.push(task);
+    
+    // Limit task history to prevent memory growth
+    if (report.tasksCompleted.length > this.MAX_TASK_HISTORY) {
+      report.tasksCompleted = report.tasksCompleted.slice(-this.MAX_TASK_HISTORY);
+    }
   }
 
   /**
@@ -283,6 +314,13 @@ System Health: ${report.systemHealth}`;
       console.error('Knowledge mining failed:', error);
     }
 
+    // Phase 2: Weave existing memories to find deeper connections
+    try {
+      await this.weaveMemories('default');
+    } catch (error) {
+      console.error('Memory weaving failed:', error);
+    }
+
     // Phase 2: Analyze internal data for insights (existing logic)
     try {
       const response = await fetch('/.netlify/functions/ai-memory', {
@@ -301,6 +339,31 @@ System Health: ${report.systemHealth}`;
     }
   }
 
+  /**
+   * Triggers the Memory Weaver AI to find deeper connections in existing knowledge.
+   */
+  private async weaveMemories(userId: string): Promise<void> {
+    console.log('🕸️ Weaving memories to find deeper insights...');
+    try {
+      const response = await fetch('/.netlify/functions/memory-weaver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.insights && data.insights.length > 0) {
+          console.log(`🧵 Memory Weaver found ${data.insights.length} new insight(s)!`);
+          for (const insight of data.insights) {
+            await this.incorporateKnowledge(insight);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to trigger Memory Weaver:', error);
+    }
+  }
   /**
    * Runs an experiment on a new piece of knowledge in a safe sandbox.
    */
@@ -361,6 +424,11 @@ System Health: ${report.systemHealth}`;
       knowledgeEntry += ` (Verified: ${experimentResult.metrics?.performanceGain || 'Success'})`;
     }
     report.knowledgeLearned.push(knowledgeEntry);
+    
+    // Limit knowledge history to prevent memory growth
+    if (report.knowledgeLearned.length > this.MAX_KNOWLEDGE_HISTORY) {
+      report.knowledgeLearned = report.knowledgeLearned.slice(-this.MAX_KNOWLEDGE_HISTORY);
+    }
 
     // Update AI prompts library
     await fetch('/.netlify/functions/ai-prompts-library', {

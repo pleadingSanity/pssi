@@ -19,8 +19,19 @@
       "type": "image/png"
     }
   ],
-  "categories": ["productivity", "utilities", "ai"],
-  "screenshots": [],
+  "categories": ["productivity", "utilities", "lifestyle", "health"],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/screenshot2.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    }
+  ],
   "share_target": {
     "action": "/share",
     "method": "POST",

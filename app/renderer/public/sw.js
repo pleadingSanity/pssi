@@ -13,6 +13,11 @@ const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 
+// Cache size limits (entries, not bytes)
+const MAX_DYNAMIC_CACHE_SIZE = 50;
+const MAX_API_CACHE_SIZE = 100;
+const MAX_API_CACHE_AGE_MS = 60 * 60 * 1000; // 1 hour
+
 // Files to cache immediately
 const STATIC_FILES = [
   '/',
@@ -58,12 +63,54 @@ self.addEventListener('activate', (event: any) => {
           }
         })
       );
+    }).then(() => {
+      // Clean up oversized caches on activation
+      return Promise.all([
+        limitCacheSize(DYNAMIC_CACHE, MAX_DYNAMIC_CACHE_SIZE),
+        limitCacheSize(API_CACHE, MAX_API_CACHE_SIZE),
+        cleanOldApiCache()
+      ]);
     })
   );
   
   // Take control immediately
   return (self as any).clients.claim();
 });
+
+/**
+ * Limit cache size to prevent excessive memory usage
+ */
+async function limitCacheSize(cacheName: string, maxSize: number) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  
+  if (keys.length > maxSize) {
+    // Delete oldest entries (FIFO)
+    const toDelete = keys.slice(0, keys.length - maxSize);
+    await Promise.all(toDelete.map(key => cache.delete(key)));
+    console.log(`🧹 Cleaned ${toDelete.length} items from ${cacheName}`);
+  }
+}
+
+/**
+ * Clean old API cache entries
+ */
+async function cleanOldApiCache() {
+  const cache = await caches.open(API_CACHE);
+  const keys = await cache.keys();
+  const now = Date.now();
+  
+  for (const request of keys) {
+    const response = await cache.match(request);
+    if (response) {
+      const cachedTime = response.headers.get('sw-cached-time');
+      if (cachedTime && (now - parseInt(cachedTime)) > MAX_API_CACHE_AGE_MS) {
+        await cache.delete(request);
+        console.log(`🧹 Deleted old API cache: ${request.url}`);
+      }
+    }
+  }
+}
 
 // Fetch handler - network first, fall back to cache
 self.addEventListener('fetch', (event: any) => {
@@ -75,11 +122,19 @@ self.addEventListener('fetch', (event: any) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful API responses
+          // Cache successful API responses with timestamp
           if (response.ok) {
             const responseClone = response.clone();
+            const responseWithTime = new Response(responseClone.body, {
+              status: response.status,
+              statusText: response.statusText,
+              headers: new Headers(response.headers)
+            });
+            responseWithTime.headers.set('sw-cached-time', Date.now().toString());
+            
             caches.open(API_CACHE).then((cache) => {
-              cache.put(request, responseClone);
+              cache.put(request, responseWithTime);
+              limitCacheSize(API_CACHE, MAX_API_CACHE_SIZE);
             });
           }
           return response;
@@ -100,28 +155,25 @@ self.addEventListener('fetch', (event: any) => {
     return;
   }
 
-  // Static files - cache first
+  // Static files - Stale-While-Revalidate strategy
   event.respondWith(
     caches.match(request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-
-      return fetch(request).then((response) => {
-        // Cache dynamic content
-        if (response.ok) {
-          const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE).then((cache) => {
-            cache.put(request, responseClone);
-          });
-        }
-        return response;
-      }).catch(() => {
-        // Return offline page
-        if (request.mode === 'navigate') {
-          return caches.match('/offline.html');
-        }
+      // Fetch from network in the background to update the cache
+      const fetchPromise = fetch(request).then((networkResponse) => {
+        caches.open(DYNAMIC_CACHE).then((cache) => {
+          cache.put(request, networkResponse.clone());
+          limitCacheSize(DYNAMIC_CACHE, MAX_DYNAMIC_CACHE_SIZE);
+        });
+        return networkResponse;
       });
+
+      // Return cached response immediately if available, otherwise wait for fetch
+      return cached || fetchPromise;
+    }).catch(() => {
+      // If both cache and network fail, show the offline page for navigation requests
+      if (request.mode === 'navigate') {
+        return caches.match('/offline.html');
+      }
     })
   );
 });

@@ -17,9 +17,9 @@ if ('serviceWorker' in navigator) {
       .then(registration => {
         console.log('✅ Service Worker registered for offline support');
         
-        // Background sync for updates
+        // Background sync for updates (if supported)
         if ('sync' in registration) {
-          registration.sync.register('sync-ai-data');
+          (registration as any).sync.register('sync-ai-data');
         }
       })
       .catch(err => console.error('Service Worker registration failed:', err));
@@ -100,7 +100,7 @@ class OfflineStorage {
     });
   }
 
-  async saveKnowledge(topic: string, content: string, importance: number): Promise<void> {
+  async saveKnowledge(topic: string, content: string, importance: number, experimentResult?: any): Promise<void> {
     if (!this.db) return;
 
     const transaction = this.db.transaction(['knowledge'], 'readwrite');
@@ -111,11 +111,67 @@ class OfflineStorage {
       content,
       importance,
       timestamp: new Date(),
-      source: 'auto-learned'
+      source: 'auto-learned',
+      experimentResult
     });
   }
 
-  async getUnsyncedData(): Promise<any[]> {
+  async getAllData(): Promise<{ conversations: any[]; knowledge: any[]; dailyReports: any[] }> {
+    if (!this.db) return { conversations: [], knowledge: [], dailyReports: [] };
+
+    const transaction = this.db.transaction(['conversations', 'knowledge', 'dailyReports'], 'readonly');
+    
+    const getAllFromStore = (storeName: string): Promise<any[]> => {
+      return new Promise((resolve, reject) => {
+        const request = transaction.objectStore(storeName).getAll();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    };
+
+    const [conversations, knowledge, dailyReports] = await Promise.all([
+      getAllFromStore('conversations'),
+      getAllFromStore('knowledge'),
+      getAllFromStore('dailyReports')
+    ]);
+
+    return { conversations, knowledge, dailyReports };
+  }
+
+  async clearAllStores(): Promise<void> {
+    if (!this.db) return;
+
+    const transaction = this.db.transaction(['conversations', 'knowledge', 'dailyReports'], 'readwrite');
+    
+    const clearStore = (storeName: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const request = transaction.objectStore(storeName).clear();
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    };
+
+    await Promise.all([
+      clearStore('conversations'),
+      clearStore('knowledge'),
+      clearStore('dailyReports')
+    ]);
+  }
+
+  async bulkAdd(storeName: 'conversations' | 'knowledge' | 'dailyReports', data: any[]): Promise<void> {
+    if (!this.db || !data || data.length === 0) return;
+
+    const transaction = this.db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+
+    for (const item of data) {
+      // Remove auto-incrementing keys if they exist to allow the DB to generate new ones
+      delete item.id; 
+      store.add(item);
+    }
+  }
+
+  async getUnsyncedData(limit: number = 50): Promise<any[]> {
     if (!this.db) return [];
 
     const transaction = this.db.transaction(['conversations'], 'readonly');
@@ -123,13 +179,61 @@ class OfflineStorage {
     const index = store.index('userId');
 
     return new Promise((resolve, reject) => {
-      const request = index.getAll();
-      request.onsuccess = () => {
-        const data = request.result.filter(item => !item.synced);
-        resolve(data);
+      const unsyncedItems: any[] = [];
+      const request = index.openCursor();
+      
+      request.onsuccess = (event: any) => {
+        const cursor = event.target.result;
+        if (cursor && unsyncedItems.length < limit) {
+          if (!cursor.value.synced) {
+            unsyncedItems.push(cursor.value);
+          }
+          cursor.continue();
+        } else {
+          resolve(unsyncedItems);
+        }
       };
       request.onerror = () => reject(request.error);
     });
+  }
+
+  async cleanOldData(daysToKeep: number = 30): Promise<void> {
+    if (!this.db) return;
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+
+    const transaction = this.db.transaction(['conversations', 'dailyReports'], 'readwrite');
+    
+    // Clean old conversations
+    const conversationStore = transaction.objectStore('conversations');
+    const conversationIndex = conversationStore.index('timestamp');
+    const conversationRequest = conversationIndex.openCursor(IDBKeyRange.upperBound(cutoffDate));
+    
+    conversationRequest.onsuccess = (event: any) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        if (cursor.value.synced) {
+          cursor.delete(); // Only delete synced items
+        }
+        cursor.continue();
+      }
+    };
+
+    // Clean old reports (keep only last 90 days)
+    const reportStore = transaction.objectStore('dailyReports');
+    const reportRequest = reportStore.openCursor();
+    
+    reportRequest.onsuccess = (event: any) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        const reportDate = new Date(cursor.value.date);
+        if (reportDate < cutoffDate) {
+          cursor.delete();
+        }
+        cursor.continue();
+      }
+    };
   }
 
   async saveDailyReport(userId: string, report: any): Promise<void> {
@@ -154,24 +258,31 @@ offlineStorage.init().then(() => {
 
 // Offline AI (basic fallback)
 class OfflineAI {
-  private responses: Record<string, string> = {
-    greeting: "Hi! I'm working offline right now, but I can still help you with basic tasks. Your messages will sync when you're back online.",
-    help: "While offline, I can: provide cached information, save your messages for later, and give you basic assistance. Full AI features will be available when you reconnect.",
-    default: "I've saved your message. When you're back online, I'll process it with the full AI system and give you a complete response."
-  };
+  // Simulates a lightweight, local AI model for better offline responses.
+  private localModel(prompt: string): string {
+    const p = prompt.toLowerCase();
+    if (p.includes('hello') || p.includes('hi')) {
+      return "Hello! I'm currently offline, but I've saved your message. We'll get a full response from the AI network once we're back online.";
+    }
+    if (p.includes('how are you')) {
+      return "I'm operating in offline mode, but I'm ready to assist and save your thoughts. How are you doing?";
+    }
+    if (p.includes('help')) {
+      return "Of course. While offline, I can save all your messages, provide basic information from my cache, and keep track of our conversation. Everything will be synced for a full AI response later.";
+    }
+    if (p.includes('thank you') || p.includes('thanks')) {
+      return "You're very welcome! I've noted your message.";
+    }
+    return "I've recorded your message. It will be processed by the full AI network as soon as we're back online. Feel free to continue our conversation.";
+  }
 
   processOffline(message: string): string {
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('hi') || lowerMessage.includes('hello')) {
-      return this.responses.greeting;
-    }
-    
-    if (lowerMessage.includes('help')) {
-      return this.responses.help;
-    }
-    
-    return this.responses.default;
+    // In a real application, this could be a more sophisticated local model
+    // like a quantized version of a larger model running on-device.
+    // For now, this simulation provides more dynamic responses than static ones.
+    const response = this.localModel(message);
+    console.log(`🤖 Offline AI generated response: "${response}"`);
+    return response;
   }
 }
 
@@ -214,12 +325,14 @@ async function fetchWithOfflineSupport(url: string, options: RequestInit): Promi
   }
 }
 
-// Background sync when online
-if ('sync' in navigator.serviceWorker) {
+// Background sync when online (if supported)
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.ready.then(registration => {
-    registration.sync.register('sync-ai-data').then(() => {
-      console.log('🔄 Background sync registered');
-    });
+    if ('sync' in registration) {
+      (registration as any).sync.register('sync-ai-data').then(() => {
+        console.log('🔄 Background sync registered');
+      });
+    }
   });
 }
 

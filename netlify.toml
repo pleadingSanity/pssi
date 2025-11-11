@@ -200,6 +200,26 @@
   status = 200
 
 [[redirects]]
+  from = "/.netlify/functions/memory-weaver"
+  to = "/.netlify/functions/memory-weaver"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/ai-alliance"
+  to = "/.netlify/functions/ai-alliance"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/system-guardian"
+  to = "/.netlify/functions/system-guardian"
+  status = 200
+
+[[redirects]]
+  from = "/alliance"
+  to = "/alliance.html"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
