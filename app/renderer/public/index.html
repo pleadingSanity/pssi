@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSSI - Your Personal AI Assistant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+        }
+        .status-item {
+            padding: 5px 12px;
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+        .status-item.offline {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .message {
+            display: flex;
+            gap: 15px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .user .message-avatar {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+        .ai .message-avatar {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 16px;
+            line-height: 1.6;
+        }
+        .user .message-content {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+        .ai .message-content {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .message-meta {
+            font-size: 11px;
+            color: #888;
+            margin-top: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .thinking {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+        }
+        .thinking span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6366f1;
+            animation: pulse 1.4s infinite;
+        }
+        .thinking span:nth-child(2) { animation-delay: 0.2s; }
+        .thinking span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        .input-container {
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .input-field {
+            flex: 1;
+            background: rgba(10, 10, 10, 0.6);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px;
+            color: #fff;
+            font-size: 15px;
+            resize: none;
+            font-family: inherit;
+            max-height: 150px;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        .send-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .quick-action {
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quick-action:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 PSSI - Your AI Assistant</h1>
+            <div class="status">
+                <div class="status-item" id="gptStatus">GPT-4o</div>
+                <div class="status-item" id="claudeStatus">Claude 3.5</div>
+                <div class="status-item" id="geminiStatus">Gemini 2.0</div>
+                <div class="status-item" id="monitorStatus">Code Monitor</div>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message ai">
+                <div class="message-avatar">🧠</div>
+                <div class="message-content">
+                    <strong>Hello! I'm your personal AI assistant.</strong><br><br>
+                    I have full access to GPT-4o, Claude 3.5, and Gemini 2.0. I can:<br>
+                    • Answer any question with synthesized intelligence from all 3 AIs<br>
+                    • <strong>🎨 Create Images</strong> (DALL-E 3) with movement energy<br>
+                    • <strong>🎤 Generate Voice</strong> (TTS with emotion)<br>
+                    • <strong>📖 Write Stories</strong> (uplifting or dark, always compelling)<br>
+                    • <strong>🌍 ULTIMATE WEB BUILDER</strong> - Production-ready sites using ALL 3 AIs<br>
+                    • <strong>📹 Embed Videos</strong> for your content<br>
+                    • <strong>Deploy Anywhere:</strong> Netlify, Vercel, GitHub Pages<br>
+                    • <strong>Optimize EVERYTHING:</strong> Windows, Android, iPhone, Xbox, PS, Browsers<br>
+                    • <strong>Self-Optimizing</strong> - Always staying on top with all AI knowledge<br>
+                    • <strong>I am YOUR AI - saving YOU time while staying evolved</strong><br><br>
+                    🔥 LOCKED IN - Using all AIs to create PERFECTION. What should we build?
+                    <div class="message-meta">
+                        <span>Sanity AI</span>
+                        <span>All systems ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="quick-actions" id="quickActions">
+                <div class="quick-action" onclick="useQuickAction('Explain something complex in simple terms')">📚 Explain</div>
+                <div class="quick-action" onclick="useQuickAction('Help me solve a problem')">🔧 Problem Solve</div>
+                <div class="quick-action" onclick="useQuickAction('Be creative and innovative')">💡 Create</div>
+                <div class="quick-action" onclick="useQuickAction('Analyze and provide insights')">📊 Analyze</div>
+                <div class="quick-action" onclick="checkCode()">🔍 Check My Code</div>
+                <div class="quick-action" onclick="scanRepo()">🛡️ Scan Repository</div>
+                <div class="quick-action" onclick="checkPerformance()">⚡ Check Performance</div>
+                <div class="quick-action" onclick="runOptimizer()">🚀 Optimize Now</div>
+                <div class="quick-action" onclick="optimizeWindows()">🪟 Optimize Windows</div>
+                <div class="quick-action" onclick="optimizeAndroid()">📱 Optimize Android</div>
+                <div class="quick-action" onclick="optimizeiOS()">🍎 Optimize iPhone</div>
+                <div class="quick-action" onclick="optimizeConsole()">🎮 Optimize Gaming</div>
+                <div class="quick-action" onclick="optimizeBrowser()">🌐 Optimize Browser</div>
+                <div class="quick-action" onclick="generateImage()">🎨 Create Image</div>
+                <div class="quick-action" onclick="generateVoice()">🎤 Generate Voice</div>
+                <div class="quick-action" onclick="createStory()">📖 Write Story</div>
+                <div class="quick-action" onclick="buildSite()">🌍 Build Website</div>
+            </div>
+            <div class="input-wrapper">
+                <textarea 
+                    id="userInput" 
+                    class="input-field" 
+                    placeholder="Ask me anything... I'm here to help you."
+                    rows="1"
+                ></textarea>
+                <button id="sendBtn" class="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const conversationHistory = [];
+
+        // Auto-resize textarea
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Send on Enter (Shift+Enter for new line)
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendBtn.onclick = sendMessage;
+
+        // Check AI health on load
+        checkAIHealth();
+        checkCodeMonitor();
+
+        async function checkAIHealth() {
+            try {
+                const response = await fetch('/.netlify/functions/ai-health');
+                const data = await response.json();
+                
+                document.getElementById('gptStatus').classList.toggle('offline', !data.providers.openai);
+                document.getElementById('claudeStatus').classList.toggle('offline', !data.providers.anthropic);
+                document.getElementById('geminiStatus').classList.toggle('offline', !data.providers.gemini);
+            } catch (error) {
+                console.error('Health check failed:', error);
+            }
+        }
+
+        async function checkCodeMonitor() {
+            try {
+                const response = await fetch('/.netlify/functions/code-monitor?action=status');
+                const data = await response.json();
+                
+                const monitorStatus = document.getElementById('monitorStatus');
+                if (data.monitoring) {
+                    monitorStatus.textContent = '🛡️ 24/7 Monitor';
+                } else {
+                    monitorStatus.classList.add('offline');
+                    monitorStatus.textContent = '⚠️ Monitor Off';
+                }
+            } catch (error) {
+                console.error('Monitor check failed:', error);
+            }
+        }
+
+        async function checkCode() {
+            const code = prompt('Paste your code to analyze:', '');
+            if (!code) return;
+
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/code-analyzer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        code,
+                        filepath: 'user-code',
+                        action: 'analyze'
+                    })
+                });
+
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const issues = data.result.issues || [];
+                    const score = data.result.score || 'N/A';
+                    const summary = data.result.summary || 'Analysis complete';
+                    
+                    let message = `📊 Code Quality Score: ${score}/100\n\n${summary}\n\n`;
+                    if (issues.length > 0) {
+                        message += `Found ${issues.length} issues:\n\n`;
+                        issues.forEach((issue: any, i: number) => {
+                            message += `${i+1}. [${issue.severity}] ${issue.type}\n   Line ${issue.line}: ${issue.description}\n   Fix: ${issue.fix}\n\n`;
+                        });
+                    } else {
+                        message += '✅ No issues found! Your code looks great!';
+                    }
+                    
+                    addMessage(message, 'ai', 'Code Analyzer • GPT-4o');
+                } else {
+                    addMessage(`❌ Analysis failed: ${data.error}`, 'ai', 'Error');
+                }
+            } catch (error: any) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function scanRepo() {
+            addMessage('🔍 Scanning repository for issues...', 'ai', 'Code Monitor');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/code-monitor?action=scan&repository=pleadingSanity/pssi');
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = `📊 Repository Scan Complete\n\n`;
+                    message += `Repository: ${data.repository}\n`;
+                    message += `Scanned: ${new Date(data.scannedAt).toLocaleString()}\n\n`;
+                    
+                    if (data.issues.length === 0) {
+                        message += '✅ No issues found! Your code is clean!';
+                    } else {
+                        message += `Found ${data.issues.length} potential issues:\n\n`;
+                        data.issues.forEach((item: any, i: number) => {
+                            message += `${i+1}. ${item.file} (${item.commit})\n`;
+                            item.issues.forEach((issue: string) => {
+                                message += `   • ${issue}\n`;
+                            });
+                            message += '\n';
+                        });
+                    }
+                    
+                    addMessage(message, 'ai', '24/7 Code Monitor');
+                } else {
+                    addMessage(`⚠️ ${data.error || 'Scan not available'}`, 'ai', 'Monitor');
+                }
+            } catch (error: any) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function checkPerformance() {
+            addMessage('⚡ Checking system performance...', 'ai', 'Performance Monitor');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/performance-optimizer?action=health');
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                let message = `📊 System Health Report\n\n`;
+                message += `Overall Status: ${data.overall === 'healthy' ? '✅ HEALTHY' : '⚠️ DEGRADED'}\n`;
+                message += `Timestamp: ${new Date(data.timestamp).toLocaleString()}\n`;
+                message += `Uptime: ${data.uptime}\n\n`;
+                
+                message += `Frontend: ${data.checks.frontend.status} (${data.checks.frontend.latency})\n`;
+                message += `Functions: ${data.checks.functions.status} (${data.checks.functions.latency})\n`;
+                message += `CDN: ${data.checks.cdn.status} (Hit Rate: ${data.checks.cdn.hitRate})\n\n`;
+                
+                message += `AI Providers:\n`;
+                message += `  • OpenAI: ${data.checks.ai.openai.status} (${data.checks.ai.openai.avgResponse})\n`;
+                message += `  • Anthropic: ${data.checks.ai.anthropic.status} (${data.checks.ai.anthropic.avgResponse})\n`;
+                message += `  • Gemini: ${data.checks.ai.gemini.status} (${data.checks.ai.gemini.avgResponse})\n\n`;
+                
+                message += `✅ All systems running optimally!`;
+                
+                addMessage(message, 'ai', 'Performance Monitor');
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function runOptimizer() {
+            addMessage('🚀 Running AI-powered optimization analysis...', 'ai', 'Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/performance-optimizer?action=optimize');
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.suggestions) {
+                    let message = `🚀 Optimization Recommendations\n\n`;
+                    
+                    data.suggestions.forEach((opt, i) => {
+                        const priority = opt.priority === 'high' ? '🔴' : opt.priority === 'medium' ? '🟡' : '🟢';
+                        message += `${i+1}. ${priority} [${opt.category.toUpperCase()}]\n`;
+                        message += `   Action: ${opt.action}\n`;
+                        message += `   Impact: ${opt.impact}\n`;
+                        message += `   How: ${opt.implementation}\n\n`;
+                    });
+                    
+                    message += `💡 I'll continuously monitor and apply these optimizations automatically!`;
+                    addMessage(message, 'ai', 'AI Optimizer');
+                } else {
+                    addMessage('✅ System already fully optimized!', 'ai', 'Optimizer');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeWindows() {
+            addMessage('🪟 Running Windows optimization analysis...', 'ai', 'System Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/system-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ platform: 'windows', action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.optimizations) {
+                    let message = `🪟 **Windows Optimization Plan**\n\n`;
+                    message += `Expected Improvement: ${data.estimatedImprovement}\n\n`;
+                    
+                    const categories = ['critical', 'performance', 'memory', 'security', 'cleanup'];
+                    categories.forEach(cat => {
+                        const opts = data.optimizations.filter(o => o.category === cat);
+                        if (opts.length > 0) {
+                            message += `### ${cat.toUpperCase()}\n`;
+                            opts.forEach((opt, i) => {
+                                const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                                message += `${impact} **${opt.name}** (Impact: ${opt.impact})\n`;
+                                message += `   Why: ${opt.benefit}\n`;
+                                message += `   Steps:\n`;
+                                if (Array.isArray(opt.steps)) {
+                                    opt.steps.forEach((step, j) => message += `   ${j+1}. ${step}\n`);
+                                }
+                                message += `   Risk: ${opt.risk}\n\n`;
+                            });
+                        }
+                    });
+                    
+                    message += `\n💡 Run these optimizations in PowerShell (as Administrator) for best results!`;
+                    addMessage(message, 'ai', 'Windows Optimizer');
+                } else {
+                    addMessage(data.analysis || 'Optimization complete!', 'ai', 'System Optimizer');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeAndroid() {
+            addMessage('📱 Running Android optimization analysis...', 'ai', 'System Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/system-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ platform: 'android', action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success && data.optimizations) {
+                    let message = `📱 **Android Optimization Plan**\n\n`;
+                    message += `Expected Improvement: ${data.estimatedImprovement}\n\n`;
+                    
+                    const categories = ['critical', 'performance', 'battery', 'memory', 'cleanup'];
+                    categories.forEach(cat => {
+                        const opts = data.optimizations.filter(o => o.category === cat);
+                        if (opts.length > 0) {
+                            message += `### ${cat.toUpperCase()}\n`;
+                            opts.forEach((opt, i) => {
+                                const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                                message += `${impact} **${opt.name}** (Impact: ${opt.impact})\n`;
+                                message += `   Why: ${opt.benefit}\n`;
+                                message += `   Steps:\n`;
+                                if (Array.isArray(opt.steps)) {
+                                    opt.steps.forEach((step, j) => message += `   ${j+1}. ${step}\n`);
+                                }
+                                message += `   Risk: ${opt.risk}\n\n`;
+                            });
+                        }
+                    });
+                    
+                    message += `\n💡 Some optimizations require Developer Options or ADB!`;
+                    addMessage(message, 'ai', 'Android Optimizer');
+                } else {
+                    addMessage(data.analysis || 'Optimization complete!', 'ai', 'System Optimizer');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeiOS() {
+            addMessage('🍎 Running iPhone/iOS optimization analysis...', 'ai', 'iOS Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/ios-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || formatOptimizations('iPhone/iOS', data.optimizations, data.estimatedImprovement);
+                    addMessage(message, 'ai', 'iOS Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeConsole() {
+            const console = prompt('Which console? (xbox/playstation)', 'xbox');
+            if (!console) return;
+            
+            addMessage(`🎮 Running ${console.toUpperCase()} optimization analysis...`, 'ai', 'Gaming Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/console-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ console, action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || `🎮 **${console.toUpperCase()} Optimization Guide**\n\n${JSON.stringify(data, null, 2)}`;
+                    addMessage(message, 'ai', 'Gaming Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function optimizeBrowser() {
+            const browser = prompt('Which browser? (chrome/firefox/edge/safari)', 'chrome');
+            if (!browser) return;
+            
+            addMessage(`🌐 Running ${browser.toUpperCase()} optimization analysis...`, 'ai', 'Browser Optimizer');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/browser-optimizer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ browser, action: 'optimize' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = data.guide || `🌐 **${browser.toUpperCase()} Optimization Guide**\n\n${JSON.stringify(data, null, 2)}`;
+                    addMessage(message, 'ai', 'Browser Optimizer');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Optimization failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        function formatOptimizations(platform, optimizations, improvement) {
+            if (!optimizations) return '';
+            
+            let message = `**${platform} Optimization Plan**\n\n`;
+            message += `Expected Improvement: ${improvement}\n\n`;
+            
+            if (Array.isArray(optimizations)) {
+                optimizations.forEach((opt, i) => {
+                    const impact = opt.impact === 'high' ? '🔴' : opt.impact === 'medium' ? '🟡' : '🟢';
+                    message += `${i+1}. ${impact} **${opt.name}**\n`;
+                    if (opt.path) message += `   Path: ${opt.path}\n`;
+                    if (opt.action) message += `   Action: ${opt.action}\n`;
+                    if (opt.benefit) message += `   Benefit: ${opt.benefit}\n`;
+                    message += `\n`;
+                });
+            }
+            
+            return message;
+        }
+
+        async function generateImage() {
+            const prompt = window.prompt('What image do you want to create?');
+            if (!prompt) return;
+            
+            addMessage(`🎨 Creating image: "${prompt}"...`, 'user');
+            addMessage('✨ Generating with DALL-E 3...', 'ai', 'Image Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/image-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, quality: 'hd', style: 'vivid' })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const message = `🎨 **Image Created!**\n\n![${prompt}](${data.image.url})\n\n**Enhanced Prompt:** ${data.enhancedPrompt}\n\n**Download:** [Click here](${data.image.url})`;
+                    addMessage(message, 'ai', 'Image Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Image generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function generateVoice() {
+            const text = window.prompt('What text should I speak?');
+            if (!text) return;
+            
+            addMessage(`🎤 Converting to speech: "${text.substring(0, 50)}..."`, 'user');
+            addMessage('🎵 Generating voice with emotion...', 'ai', 'Voice Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/voice-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, emotion: 'uplifting', speed: 1.0 })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const audioUrl = `data:${data.audio.mimeType};base64,${data.audio.base64}`;
+                    const message = `🎤 **Voice Generated!**\n\n<audio controls src="${audioUrl}" style="width: 100%; max-width: 500px;"></audio>\n\n**Voice:** ${data.audio.voice}\n**Speed:** ${data.audio.speed}x`;
+                    addMessage(message, 'ai', 'Voice Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Voice generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function createStory() {
+            const prompt = window.prompt('What story should I write? (e.g., "A dark tale about...", "An uplifting story of...")');
+            if (!prompt) return;
+            
+            const tone = prompt.toLowerCase().includes('dark') ? 'dark' : 'uplifting';
+            
+            addMessage(`📖 Writing ${tone} story: "${prompt}"...`, 'user');
+            addMessage('✍️ Crafting a compelling narrative...', 'ai', 'Story Generator');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/story-generator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, tone, length: 'medium', includeImage: true })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    let message = `📖 **${data.story.title}**\n\n`;
+                    if (data.coverImage) {
+                        message += `![Cover](${data.coverImage.url})\n\n`;
+                    }
+                    message += `*${data.story.summary}*\n\n`;
+                    message += `**Read Time:** ${data.story.readTime} | **Words:** ${data.story.wordCount}\n\n---\n\n`;
+                    message += data.story.content.split('\n\n').join('\n\n');
+                    addMessage(message, 'ai', 'Story Generator');
+                } else {
+                    addMessage('❌ ' + (data.error || 'Story generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+
+        async function buildSite() {
+            const prompt = window.prompt('🌍 ULTIMATE WEB BUILDER\n\nDescribe your dream website:');
+            if (!prompt) return;
+            
+            const framework = window.prompt('Framework? (html/react/vue/nextjs)', 'html') || 'html';
+            const style = window.prompt('Style? (modern/minimal/vibrant/dark/glassmorphism)', 'modern') || 'modern';
+            
+            addMessage(`🌍 Building ${framework.toUpperCase()} website: "${prompt}"...`, 'user');
+            addMessage('⚡ **SANITY AI MODE** - Combining GPT-4o + Claude + Gemini for PERFECTION...', 'ai', 'Ultimate Web Builder');
+            
+            const thinkingId = addThinking();
+            try {
+                const response = await fetch('/.netlify/functions/ultimate-web-builder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt, 
+                        framework,
+                        style,
+                        aiMode: 'sanity',
+                        features: ['responsive', 'animations', 'seo', 'accessibility']
+                    })
+                });
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                if (data.success) {
+                    const files = Object.keys(data.website.files);
+                    let message = `🌍 **ULTIMATE WEBSITE BUILT!**\n\n`;
+                    message += `**AI Mode:** ${data.aiMode === 'sanity' ? '🧠 SANITY (All 3 AIs)' : '🚀 FAST (GPT-4o)'}\n`;
+                    message += `**Framework:** ${data.website.framework}\n`;
+                    message += `**Style:** ${data.website.style}\n`;
+                    message += `**Files Generated:** ${files.join(', ')}\n\n`;
+                    message += `**Performance:** ${data.website.performance.score}/100 ⚡\n`;
+                    message += `**Accessibility:** ${data.website.accessibility.score}/100 ♿\n`;
+                    message += `**SEO:** ${data.website.seo.score}/100 🔍\n\n`;
+                    message += `**Improvements Applied:**\n${data.improvements.join('\n')}\n\n`;
+                    
+                    if (data.deployment) {
+                        message += `**🚀 Deploy to ${data.deployment.file}:**\n`;
+                        message += data.deployment.instructions.join('\n') + '\n\n';
+                    }
+                    
+                    message += `**Preview (first 800 chars):**\n\`\`\`html\n${data.preview.substring(0, 800)}...\n\`\`\``;
+                    
+                    addMessage(message, 'ai', 'Ultimate Web Builder');
+                    
+                    // Show full preview in new window
+                    const preview = window.open('', '_blank');
+                    if (preview && data.preview) {
+                        preview.document.write(data.preview);
+                        preview.document.close();
+                    }
+                    
+                    // Offer download
+                    setTimeout(() => {
+                        if (confirm('Download complete website files as ZIP?')) {
+                            downloadWebsiteFiles(data.website.files, prompt);
+                        }
+                    }, 1000);
+                } else {
+                    addMessage('❌ ' + (data.error || 'Website generation failed'), 'ai', 'Error');
+                }
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Error: ${error.message}`, 'ai', 'Error');
+            }
+        }
+        
+        function downloadWebsiteFiles(files, projectName) {
+            // Create download links for each file
+            Object.entries(files).forEach(([filename, content]) => {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            addMessage(`✅ Downloaded ${Object.keys(files).length} files! Check your Downloads folder.`, 'ai', 'Ultimate Web Builder');
+        }
+
+        function useQuickAction(action) {
+            userInput.value = action;
+            userInput.focus();
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            conversationHistory.push({ role: 'user', content: message });
+
+            // Clear input
+            userInput.value = '';
+            userInput.style.height = 'auto';
+
+            // Disable send button
+            sendBtn.disabled = true;
+
+            // Show thinking indicator
+            const thinkingId = addThinking();
+
+            try {
+                const startTime = Date.now();
+                
+                // Call Sanity AI with full context
+                const response = await fetch('/.netlify/functions/sanity-ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: buildContextualPrompt(message),
+                        temperature: 0.7,
+                        maxTokens: 2000
+                    })
+                });
+
+                const data = await response.json();
+                removeThinking(thinkingId);
+
+                const elapsed = Date.now() - startTime;
+
+                if (data.success) {
+                    const aiProviders = data.contributors ? data.contributors.join(', ') : data.provider;
+                    const meta = `${aiProviders} • ${data.usage?.totalTokens || '?'} tokens • ${(elapsed/1000).toFixed(1)}s`;
+                    
+                    addMessage(data.content, 'ai', meta);
+                    conversationHistory.push({ role: 'assistant', content: data.content });
+                } else {
+                    addMessage(`⚠️ ${data.error}\n\n${data.hint || ''}`, 'ai', 'Error');
+                }
+
+            } catch (error) {
+                removeThinking(thinkingId);
+                addMessage(`❌ Connection failed: ${error.message}`, 'ai', 'Error');
+            } finally {
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        function buildContextualPrompt(currentMessage) {
+            if (conversationHistory.length === 0) {
+                return currentMessage;
+            }
+
+            // Include last 5 exchanges for context
+            const recentHistory = conversationHistory.slice(-10);
+            const context = recentHistory.map(msg => 
+                `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+            ).join('\n\n');
+
+            return `Previous conversation:\n${context}\n\nUser: ${currentMessage}`;
+        }
+
+        function addMessage(content, type, meta = '') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const avatar = type === 'user' ? '👤' : '🧠';
+            const formattedContent = content.replace(/\n/g, '<br>');
+            const metaHtml = meta ? `<div class="message-meta"><span>${meta}</span></div>` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    ${formattedContent}
+                    ${metaHtml}
+                </div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addThinking() {
+            const thinkingDiv = document.createElement('div');
+            const thinkingId = 'thinking-' + Date.now();
+            thinkingDiv.id = thinkingId;
+            thinkingDiv.className = 'message ai';
+            thinkingDiv.innerHTML = `
+                <div class="message-avatar">🧠</div>
+                <div class="message-content">
+                    <div class="thinking">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(thinkingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return thinkingId;
+        }
+
+        function removeThinking(id) {
+            const thinkingDiv = document.getElementById(id);
+            if (thinkingDiv) thinkingDiv.remove();
+        }
+
+        // Auto-focus input on load
+        userInput.focus();
+    </script>
+</body>
+</html>

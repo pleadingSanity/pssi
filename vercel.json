@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "app/renderer/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

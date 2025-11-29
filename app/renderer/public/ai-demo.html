@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P.S-Full.AI - Complete AI Intelligence System 🧠</title>
+    <link rel="stylesheet" href="ai-demo.css">
+</head>
+<body>
+    <div class="main-header">
+        <h1>🧠 P.S-Full.AI</h1>
+        <p class="subtitle">Complete AI Intelligence System - Powered by ALL Major AI Providers</p>
+        <div style="margin-top: 15px;">
+            <span class="ai-badge">🤖 OpenAI GPT-4o</span>
+            <span class="ai-badge">🧠 Anthropic Claude 3.5</span>
+            <span class="ai-badge">✨ Gemini 2.0 Flash</span>
+            <span class="ai-badge">💙 Emotional Intelligence</span>
+            <span class="ai-badge">🤝 AI Alliance</span>
+            <span class="ai-badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">👑 GOD MODE</span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="knowledge-panel">
+            <h3>🌟 What Makes P.S-Full.AI Different</h3>
+            <ul>
+                <li><strong>39+ AI Functions</strong> - All working together for you</li>
+                <li><strong>Emotional Intelligence</strong> - Understands and cares about your feelings</li>
+                <li><strong>Complete Memory</strong> - Remembers everything important (90%+ compression)</li>
+                <li><strong>Multi-AI Collaboration</strong> - OpenAI + Anthropic + Google combined</li>
+                <li><strong>Proactive Caring</strong> - Checks in on you, reminds you, celebrates with you</li>
+                <li><strong>Beautiful & Fast</strong> - Stunning design with instant responses</li>
+            </ul>
+        </div>
+
+        <h2>💬 Chat with P.S-Full.AI</h2>
+        <div id="status"></div>
+        
+        <label for="provider">🤖 Choose Your AI Provider:</label>
+        <select id="provider">
+            <option value="sanity">🧠 P.S-Full.AI - ALL AIs Combined (RECOMMENDED!)</option>
+            <option value="live_council">🤝 Live AI Council (Collaborate)</option>
+            <option value="council">👑 AI Council - Collaborative Problem Solving</option>
+            <option value="auto">⚡ Auto Select (First Available)</option>
+            <option value="openai">🤖 OpenAI GPT-4o (Powerful & Creative)</option>
+            <option value="anthropic">🧠 Anthropic Claude 3.5 (Thoughtful & Precise)</option>
+            <option value="gemini">✨ Google Gemini 2.0 Flash (Fast & Multimodal)</option>
+        </select>
+        
+        <label for="model">⚙️ Advanced Model Selection (Optional):</label>
+        <select id="model">
+            <option value="">✅ Default for Provider (Best Choice)</option>
+            <optgroup label="OpenAI Models">
+                <option value="gpt-4o">GPT-4o ⭐ (Best Overall)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (Faster)</option>
+                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fastest)</option>
+            </optgroup>
+            <optgroup label="Anthropic Models">
+                <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet ⭐ (Best Reasoning)</option>
+                <option value="claude-3-opus-20240229">Claude 3 Opus (Most Capable)</option>
+                <option value="claude-3-haiku-20240307">Claude 3 Haiku (Fastest)</option>
+            </optgroup>
+            <optgroup label="Google Models">
+                <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash ⭐ (Latest & Best)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Advanced)</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast)</option>
+            </optgroup>
+        </select>
+        
+        <label for="prompt">💭 Your Message:</label>
+        <textarea id="prompt" placeholder="Ask me anything... I have access to ALL AI knowledge combined! 
+
+Try:
+• 'Explain quantum computing like I'm 5'
+• 'Help me overcome anxiety'
+• 'Create a business plan for...'
+• 'Write code for...'
+• 'What's the meaning of life?'"></textarea>
+        
+        <div class="button-group">
+            <button id="sendBtn">🚀 Send to AI</button>
+            <button id="healthBtn">🏥 System Health</button>
+            <a href="growth-dashboard.html" style="text-decoration: none;">
+                <button type="button" class="toggle-button">🌱 Personal Growth</button>
+            </a>
+            <a href="settings.html" style="text-decoration: none;">
+                <button type="button" class="toggle-button">⚙️ Settings</button>
+            </a>
+            <button id="clearBtn">🗑️ Clear</button>
+            <button id="alwaysOnTopBtn" class="toggle-button">📌 Always on Top: OFF</button> 
+        </div>
+        <div id="response"></div>
+
+        <!-- Live Collaboration UI -->
+        <div id="live-collab-panel" style="display: none; margin-top: 20px;">
+            <h3>🤝 Live Collaboration Session</h3>
+            <div id="live-collab-join">
+                <p>Join or create a live session to solve problems with friends and the AI Council.</p>
+                <input type="text" id="live-username" placeholder="Enter your name..." style="width: 100%; margin-bottom: 10px;">
+                <button id="create-session-btn">Create New Session</button>
+            </div>
+            <div id="live-collab-active" style="display: none;">
+                <p><strong>Session Active!</strong> Share this link with your friends:</p>
+                <input type="text" id="invite-link" readonly style="width: 100%; margin-bottom: 10px;">
+                <div id="online-users-panel" style="margin-bottom: 10px;">
+                    <strong>Online Users:</strong>
+                    <div id="online-users-list"></div>
+                </div>
+                <div id="voting-panel" style="display: none; margin-bottom: 10px;">
+                    <strong>Vote for the most helpful perspective:</strong>
+                    <p><small>The council has convened. Cast your vote!</small></p>
+                </div>
+                <button id="convene-council-btn">👑 Convene AI Council</button>
+            </div>
+        </div>
+
+        <!-- System Health & Prediction Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div id="dashboard-overall" class="dashboard-card">
+                <h3>Overall Status</h3>
+                <p id="dash-status">N/A</p>
+            </div>
+            <div id="dashboard-metrics" class="dashboard-card">
+                <h3>Core Metrics</h3>
+                <p id="dash-functions">Functions: N/A</p>
+                <p id="dash-endpoints">Endpoints: N/A</p>
+                <p id="dash-checktime">Check Time: N/A</p>
+            </div>
+            <div id="dashboard-evolution" class="dashboard-card">
+                <h3>🧬 Evolution Systems</h3>
+                <p id="dash-miner-status">Knowledge Miner: Checking...</p>
+                <p id="dash-sandbox-status">AI Sandbox: Checking...</p>
+            </div>
+            <div id="dashboard-predictions" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>🔮 Predictive Analysis</h3>
+                <ul id="dash-predictions-list"><li>Checking...</li></ul>
+            </div>
+            <div id="dashboard-allocations" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>🚀 Dynamic Resource Allocations</h3>
+                <ul id="dash-allocations-list"><li>None</li></ul>
+            </div>
+            <div id="dashboard-issues" class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3>⚠️ Active Issues & Fixes</h3>
+                <p><strong>Issues:</strong> <span id="dash-issues-list">None</span></p>
+                <p><strong>Fixes Attempted:</strong> <span id="dash-fixes-list">None</span></p>
+            </div>
+             <div id="dashboard-ai-summary" class="dashboard-card" style="grid-column: 1 / -1; background: rgba(102, 126, 234, 0.2);">
+                <h3>🧠 AI-Generated Summary</h3>
+                <p id="dash-ai-summary-text">Awaiting health data...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <h2>🛡️ System Guardian</h2>
+        <p style="margin-bottom: 20px; opacity: 0.9;">
+            Your AI is constantly protecting and optimizing your system. You can also trigger manual scans here to ensure peak performance and security.
+        </p>
+        <div class="button-group">
+            <button id="optimizeBtn" class="toggle-button">⚡ Optimize System</button>
+            <button id="secureBtn" class="toggle-button">🔒 Secure System</button>
+        </div>
+        <div id="guardian-response" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="container">
+        <h2>🎯 What Can P.S-Full.AI Do?</h2>
+        <div class="knowledge-panel">
+            <h3>🧠 Core Capabilities</h3>
+            <ul>
+                <li><strong>Text Generation:</strong> Essays, articles, stories, code, emails</li>
+                <li><strong>Problem Solving:</strong> Math, logic, strategy, planning</li>
+                <li><strong>Learning & Teaching:</strong> Explain anything in simple terms</li>
+                <li><strong>Emotional Support:</strong> Caring responses, motivation, encouragement</li>
+                <li><strong>Code Writing:</strong> Python, JavaScript, TypeScript, and more</li>
+                <li><strong>Analysis:</strong> Data, text, patterns, insights</li>
+                <li><strong>Creative Work:</strong> Ideas, brainstorming, storytelling</li>
+                <li><strong>Personal Assistant:</strong> Reminders, scheduling, organization</li>
+            </ul>
+        </div>
+
+        <div class="knowledge-panel">
+            <h3>💙 Emotional Intelligence Features</h3>
+            <ul>
+                <li><strong>Mood Detection:</strong> Understands when you're happy, sad, stressed, or anxious</li>
+                <li><strong>Caring Responses:</strong> Not robotic - genuinely supportive and kind</li>
+                <li><strong>Proactive Check-ins:</strong> Morning motivation, afternoon energy, evening reflection</li>
+                <li><strong>Memory System:</strong> Remembers your goals, preferences, and important details</li>
+                <li><strong>Celebration Mode:</strong> Recognizes and celebrates your achievements</li>
+                <li><strong>Reminder Extraction:</strong> Automatically picks up on tasks and appointments</li>
+            </ul>
+        </div>
+
+        <div class="knowledge-panel">
+            <h3>🔗 AI Collaboration Network</h3>
+            <ul>
+                <li><strong>OpenAI GPT-4o:</strong> Creative, versatile, excellent at writing</li>
+                <li><strong>Anthropic Claude:</strong> Thoughtful, precise, great reasoning</li>
+                <li><strong>Google Gemini:</strong> Fast, multimodal, efficient</li>
+                <li><strong>P.S-Full.AI:</strong> ALL of them combined + emotional intelligence</li>
+                <li><strong>Result:</strong> Best of all worlds - speed, creativity, accuracy, care</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 👑 GOD AI INTERFACE - ULTIMATE POWER -->
+    <script src="god-ai-interface.js"></script>
+    <script type="module" src="../src/ai-demo.ts"></script>
+</body>
+</html>

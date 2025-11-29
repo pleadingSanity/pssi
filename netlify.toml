@@ -1,0 +1,235 @@
+[build]
+  command = "pnpm exec vite build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/ai/chat"
+  to = "/.netlify/functions/ai-chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/ai/sanity"
+  to = "/.netlify/functions/sanity-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/ai/health"
+  to = "/.netlify/functions/ai-health"
+  status = 200
+
+[[redirects]]
+  from = "/api/code/analyze"
+  to = "/.netlify/functions/code-analyzer"
+  status = 200
+
+[[redirects]]
+  from = "/api/code/monitor"
+  to = "/.netlify/functions/code-monitor"
+  status = 200
+
+[[redirects]]
+  from = "/api/performance"
+  to = "/.netlify/functions/performance-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/optimize"
+  to = "/.netlify/functions/auto-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/system/optimize"
+  to = "/.netlify/functions/system-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/ios/optimize"
+  to = "/.netlify/functions/ios-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/console/optimize"
+  to = "/.netlify/functions/console-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/browser/optimize"
+  to = "/.netlify/functions/browser-optimizer"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/image"
+  to = "/.netlify/functions/image-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/voice"
+  to = "/.netlify/functions/voice-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/story"
+  to = "/.netlify/functions/story-generator"
+  status = 200
+
+[[redirects]]
+  from = "/api/ai/collaborate"
+  to = "/.netlify/functions/ai-collaboration"
+  status = 200
+
+[[redirects]]
+  from = "/api/emotion/*"
+  to = "/.netlify/functions/emotion-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/settings/*"
+  to = "/.netlify/functions/settings/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/payment/*"
+  to = "/.netlify/functions/stripe-payment/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/usage/*"
+  to = "/.netlify/functions/usage-tracking/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/create/site"
+  to = "/.netlify/functions/ultimate-web-builder"
+  status = 200
+  
+[[redirects]]
+  from = "/api/build/ultimate"
+  to = "/.netlify/functions/ultimate-web-builder"
+  status = 200
+
+[[redirects]]
+  from = "/api/embed/video"
+  to = "/.netlify/functions/video-embed"
+  status = 200
+
+[[redirects]]
+  from = "/api/multimodal/*"
+  to = "/.netlify/functions/multimodal-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/agents/*"
+  to = "/.netlify/functions/ai-agents"
+  status = 200
+
+[[redirects]]
+  from = "/api/memory/*"
+  to = "/.netlify/functions/ai-memory"
+  status = 200
+
+[[redirects]]
+  from = "/api/workflow/*"
+  to = "/.netlify/functions/workflow-automation"
+  status = 200
+
+[[redirects]]
+  from = "/api/analytics/*"
+  to = "/.netlify/functions/analytics"
+  status = 200
+
+[[redirects]]
+  from = "/api/security/*"
+  to = "/.netlify/functions/security-shield"
+  status = 200
+
+[[redirects]]
+  from = "/api/bounce/*"
+  to = "/.netlify/functions/bounce-back"
+  status = 200
+
+[[redirects]]
+  from = "/api/alerts/*"
+  to = "/.netlify/functions/threat-alerts"
+  status = 200
+
+[[redirects]]
+  from = "/alerts"
+  to = "/threat-monitor.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/repo/*"
+  to = "/.netlify/functions/repo-scanner"
+  status = 200
+
+[[redirects]]
+  from = "/api/chat/optimized"
+  to = "/.netlify/functions/zero-memory-chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/deploy/*"
+  to = "/.netlify/functions/universal-deploy"
+  status = 200
+
+[[redirects]]
+  from = "/api/status"
+  to = "/.netlify/functions/live-status"
+  status = 200
+
+[[redirects]]
+  from = "/status"
+  to = "/.netlify/functions/live-status?action=html"
+  status = 200
+  
+[[redirects]]
+  from = "/.netlify/functions/ai-council"
+  to = "/.netlify/functions/ai-council"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/live-collaboration"
+  to = "/.netlify/functions/live-collaboration"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/memory-weaver"
+  to = "/.netlify/functions/memory-weaver"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/ai-alliance"
+  to = "/.netlify/functions/ai-alliance"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/system-guardian"
+  to = "/.netlify/functions/system-guardian"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/goal-tracker"
+  to = "/.netlify/functions/goal-tracker"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/real-time-data-feed"
+  to = "/.netlify/functions/real-time-data-feed"
+  status = 200
+
+[[redirects]]
+  from = "/alliance"
+  to = "/alliance.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
