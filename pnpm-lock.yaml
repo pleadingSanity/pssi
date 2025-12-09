@@ -26,8 +26,8 @@ dependencies:
 
 devDependencies:
   '@netlify/functions':
-    specifier: ^5.1.0
-    version: 5.1.0
+    specifier: ^5.1.1
+    version: 5.1.1
   '@types/cors':
     specifier: ^2.8.19
     version: 2.8.19
@@ -35,8 +35,8 @@ devDependencies:
     specifier: ^4.17.25
     version: 4.17.25
   '@types/node':
-    specifier: ^20.19.25
-    version: 20.19.25
+    specifier: ^20.19.26
+    version: 20.19.26
   '@types/react':
     specifier: ^18.3.27
     version: 18.3.27
@@ -78,7 +78,7 @@ devDependencies:
     version: 5.9.3
   vite:
     specifier: ^5.4.21
-    version: 5.4.21(@types/node@20.19.25)
+    version: 5.4.21(@types/node@20.19.26)
   vite-plugin-electron:
     specifier: ^0.28.8
     version: 0.28.8(vite-plugin-electron-renderer@0.14.6)
@@ -923,15 +923,15 @@ packages:
       - supports-color
     dev: true
 
-  /@netlify/functions@5.1.0:
-    resolution: {integrity: sha512-LZtiQtf/QzPHIeNDZuIBxx04kmU7lCipWqZ26ejX7mYSB3yj2wvpZfF49kD8B8FoKTydSvgFmBpIcCO5FvpEXA==}
+  /@netlify/functions@5.1.1:
+    resolution: {integrity: sha512-64TvwQkAFpYb3QqYemPYDqWi1xMbYOBfg70bhy23iahWf+F9TJgOOnAVUOk5fMWGN/fk9bZG5ROc+cm32whh+g==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@netlify/types': 2.2.0
+      '@netlify/types': 2.3.0
     dev: true
 
-  /@netlify/types@2.2.0:
-    resolution: {integrity: sha512-XOWlZ2wPpdRKkAOcQbjIf/Qz7L4RjcSVINVNQ9p3F6U8V6KSEOsB3fPrc6Ly8EOeJioHUepRPuzHzJE/7V5EsA==}
+  /@netlify/types@2.3.0:
+    resolution: {integrity: sha512-5gxMWh/S7wr0uHKSTbMv4bjWmWSpwpeLYvErWeVNAPll5/QNFo9aWimMAUuh8ReLY3/fg92XAroVVu7+z27Snw==}
     engines: {node: ^18.14.0 || >=20}
     dev: true
 
@@ -1207,7 +1207,7 @@ packages:
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/cacheable-request@6.0.3:
@@ -1215,20 +1215,20 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
       '@types/responselike': 1.0.3
     dev: true
 
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/cors@2.8.19:
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/debug@4.1.12:
@@ -1244,7 +1244,7 @@ packages:
   /@types/express-serve-static-core@4.19.7:
     resolution: {integrity: sha512-FvPtiIf1LfhzsaIXhv/PHan/2FeQBbtBDtfX2QfvPxdUelMDEckK08SM6nqo1MIZY3RUlfA+HV8+hFUSio78qg==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -1262,7 +1262,7 @@ packages:
   /@types/fs-extra@9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/http-cache-semantics@4.0.4:
@@ -1280,7 +1280,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/mime@1.3.5:
@@ -1297,8 +1297,8 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@20.19.25:
-    resolution: {integrity: sha512-ZsJzA5thDQMSQO788d7IocwwQbI8B5OPzmqNvpf3NY/+MHDAS759Wo0gd2WQeXYt5AAAQjzcrTVC6SKCuYgoCQ==}
+  /@types/node@20.19.26:
+    resolution: {integrity: sha512-0l6cjgF0XnihUpndDhk+nyD3exio3iKaYROSgvh/qSevPXax3L8p5DBRFjbvalnwatGgHEQn2R88y2fA3g4irg==}
     dependencies:
       undici-types: 6.21.0
     dev: true
@@ -1307,7 +1307,7 @@ packages:
     resolution: {integrity: sha512-E6OCaRmAe4WDmWNsL/9RMqdkkzDCY1etutkflWk4c+AcjDU07Pcz1fQwTX0TQz+Pxqn9i4L1TU3UFpjnrcDgxA==}
     requiresBuild: true
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
       xmlbuilder: 15.1.1
     dev: true
     optional: true
@@ -1342,7 +1342,7 @@ packages:
   /@types/responselike@1.0.3:
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/semver@7.7.1:
@@ -1353,20 +1353,20 @@ packages:
     resolution: {integrity: sha512-Uqt8rPBE8SY0RK8JB1EzVOIZ32uqy8HwdxCnoCOsYrvnswqmFZ/k+9Ikidlk/ImhsdvBsloHbAlewb2IEBV/Og==}
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/send@1.2.1:
     resolution: {integrity: sha512-arsCikDvlU99zl1g69TcAB3mzZPpxgw0UQnaHeC1Nwb015xp8bknZv5rIfri9xTOcMuaVgvabfIRA7PSZVuZIQ==}
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
 
   /@types/serve-static@1.15.10:
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
       '@types/send': 0.17.6
     dev: true
 
@@ -1380,7 +1380,7 @@ packages:
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
     requiresBuild: true
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
     dev: true
     optional: true
 
@@ -1532,7 +1532,7 @@ packages:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.21(@types/node@20.19.25)
+      vite: 5.4.21(@types/node@20.19.26)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1764,8 +1764,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /baseline-browser-mapping@2.9.4:
-    resolution: {integrity: sha512-ZCQ9GEWl73BVm8bu5Fts8nt7MHdbt5vY9bP6WGnUh+r3l8M7CgfyTlwsgCbMC66BNxPr6Xoce3j66Ms5YUQTNA==}
+  /baseline-browser-mapping@2.9.5:
+    resolution: {integrity: sha512-D5vIoztZOq1XM54LUdttJVc96ggEsIfju2JBvht06pSzpckp3C7HReun67Bghzrtdsq9XdMGbSSB3v3GhMNmAA==}
     hasBin: true
     dev: true
 
@@ -1839,9 +1839,9 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.9.4
+      baseline-browser-mapping: 2.9.5
       caniuse-lite: 1.0.30001759
-      electron-to-chromium: 1.5.266
+      electron-to-chromium: 1.5.267
       node-releases: 2.0.27
       update-browserslist-db: 1.2.2(browserslist@4.28.1)
     dev: true
@@ -2358,8 +2358,8 @@ packages:
       - supports-color
     dev: true
 
-  /electron-to-chromium@1.5.266:
-    resolution: {integrity: sha512-kgWEglXvkEfMH7rxP5OSZZwnaDWT7J9EoZCujhnpLbfi0bbNtRkgdX2E3gt0Uer11c61qCYktB3hwkAS325sJg==}
+  /electron-to-chromium@1.5.267:
+    resolution: {integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==}
     dev: true
 
   /electron@28.3.3:
@@ -4494,7 +4494,7 @@ packages:
       vite-plugin-electron-renderer: 0.14.6
     dev: true
 
-  /vite@5.4.21(@types/node@20.19.25):
+  /vite@5.4.21(@types/node@20.19.26):
     resolution: {integrity: sha512-o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -4525,7 +4525,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.19.25
+      '@types/node': 20.19.26
       esbuild: 0.21.5
       postcss: 8.5.6
       rollup: 4.53.3
