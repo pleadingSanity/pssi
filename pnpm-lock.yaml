@@ -26,8 +26,8 @@ dependencies:
 
 devDependencies:
   '@netlify/functions':
-    specifier: ^5.1.1
-    version: 5.1.1
+    specifier: ^5.1.2
+    version: 5.1.2
   '@types/cors':
     specifier: ^2.8.19
     version: 2.8.19
@@ -923,8 +923,8 @@ packages:
       - supports-color
     dev: true
 
-  /@netlify/functions@5.1.1:
-    resolution: {integrity: sha512-64TvwQkAFpYb3QqYemPYDqWi1xMbYOBfg70bhy23iahWf+F9TJgOOnAVUOk5fMWGN/fk9bZG5ROc+cm32whh+g==}
+  /@netlify/functions@5.1.2:
+    resolution: {integrity: sha512-tpPiLSkQatuexH8AdAZ8RlALvT7ixOE9VhvpkzQGNvihcms8hzmvUDuSxQa7UneTj/sHsdirnXmnJ+nmf+Nx/w==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@netlify/types': 2.3.0
