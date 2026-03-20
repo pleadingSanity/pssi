@@ -26,8 +26,8 @@ dependencies:
 
 devDependencies:
   '@netlify/functions':
-    specifier: ^5.1.4
-    version: 5.1.4
+    specifier: ^5.1.5
+    version: 5.1.5
   '@types/cors':
     specifier: ^2.8.19
     version: 2.8.19
@@ -923,15 +923,15 @@ packages:
       - supports-color
     dev: true
 
-  /@netlify/functions@5.1.4:
-    resolution: {integrity: sha512-oTaxVzJdscykdiiWM1Xyk59l+17qOLJj5QQVCzVZ6jKD5Qi+uduw2WS3e4TTqngUhJjHiy/yeS76jT7izP2UPQ==}
+  /@netlify/functions@5.1.5:
+    resolution: {integrity: sha512-mhTl6x3TWoRwNgz8HZ9zvSR9OHB/hDEA6VinBmWY5ubgycKNCerf6XyFaFnujH2Ygx3c32yg6QOOr1v9y8euug==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@netlify/types': 2.5.0
+      '@netlify/types': 2.6.0
     dev: true
 
-  /@netlify/types@2.5.0:
-    resolution: {integrity: sha512-KwUO3eAPrFMgzwWc2ACVBoLFZepNMoWekJPYpk/7MhuaHc1LF4wjrB+h6b18Pt3xDj3vZSx+nzA5mb/gHqB9iw==}
+  /@netlify/types@2.6.0:
+    resolution: {integrity: sha512-yD20EizHJDQxajJ66Vo8RTwLwR2jMNVxufPG8MHd2AScX8jW4z0VPnnJHArq2GYPFTFZRHmiAhDrXr5m8zof6w==}
     engines: {node: ^18.14.0 || >=20}
     dev: true
 
@@ -1255,8 +1255,8 @@ packages:
       '@types/node': 20.19.37
     dev: true
 
-  /@types/debug@4.1.12:
-    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+  /@types/debug@4.1.13:
+    resolution: {integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==}
     dependencies:
       '@types/ms': 2.1.0
     dev: true
@@ -1788,8 +1788,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /baseline-browser-mapping@2.10.8:
-    resolution: {integrity: sha512-PCLz/LXGBsNTErbtB6i5u4eLpHeMfi93aUv5duMmj6caNu6IphS4q6UevDnL36sZQv9lrP11dbPKGMaXPwMKfQ==}
+  /baseline-browser-mapping@2.10.9:
+    resolution: {integrity: sha512-OZd0e2mU11ClX8+IdXe3r0dbqMEznRiT4TfbhYIbcRPZkqJ7Qwer8ij3GZAmLsRKa+II9V1v5czCkvmHH3XZBg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dev: true
@@ -1864,7 +1864,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.10.8
+      baseline-browser-mapping: 2.10.9
       caniuse-lite: 1.0.30001780
       electron-to-chromium: 1.5.321
       node-releases: 2.0.36
@@ -1905,7 +1905,7 @@ packages:
     resolution: {integrity: sha512-NhbCSIntruNDTOVI9fdXz0dihaqX2YuE1D6zZMrwiErzH4ELZHE6mdiB40wEgZNprDia+FghRFgKoAqMZRRjSA==}
     dependencies:
       7zip-bin: 5.2.0
-      '@types/debug': 4.1.12
+      '@types/debug': 4.1.13
       app-builder-bin: 4.0.0
       bluebird-lst: 1.0.9
       builder-util-runtime: 9.2.4
