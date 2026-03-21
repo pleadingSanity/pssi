@@ -1673,7 +1673,7 @@ packages:
       lazy-val: 1.0.5
       minimatch: 5.1.9
       read-config-file: 6.3.2
-      sanitize-filename: 1.6.3
+      sanitize-filename: 1.6.4
       semver: 7.7.4
       tar: 6.2.1
       temp-file: 3.4.0
@@ -3992,8 +3992,8 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sanitize-filename@1.6.3:
-    resolution: {integrity: sha512-y/52Mcy7aw3gRm7IrcGDFx/bCk4AhRh2eI9luHOQM86nZsqwiRkkq2GekHXBBD+SmPidc8i2PqtYZl+pWJ8Oeg==}
+  /sanitize-filename@1.6.4:
+    resolution: {integrity: sha512-9ZyI08PsvdQl2r/bBIGubpVdR3RR9sY6RDiWFPreA21C/EFlQhmgo20UZlNjZMMZNubusLhAQozkA0Od5J21Eg==}
     dependencies:
       truncate-utf8-bytes: 1.0.2
     dev: true
