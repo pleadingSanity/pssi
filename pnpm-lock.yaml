@@ -1866,8 +1866,8 @@ packages:
     dependencies:
       baseline-browser-mapping: 2.10.29
       caniuse-lite: 1.0.30001792
-      electron-to-chromium: 1.5.353
-      node-releases: 2.0.42
+      electron-to-chromium: 1.5.354
+      node-releases: 2.0.44
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
     dev: true
 
@@ -2383,8 +2383,8 @@ packages:
       - supports-color
     dev: true
 
-  /electron-to-chromium@1.5.353:
-    resolution: {integrity: sha512-kOrWphBi8TOZyiJZqsgqIle0lw+tzmnQK83pV9dZUd01Nm2POECSyFQMAuarzZdYqQW7FH9RaYOuaRo3h+bQ3w==}
+  /electron-to-chromium@1.5.354:
+    resolution: {integrity: sha512-JaBHwWcfIdmSAfWM5l3uwjGd431j8YEMikZ+K/2nXVuBqJKyZ0f+2h4n4JY5AyNiZmnY9qQr2RU3v9DxDmHMNg==}
     dev: true
 
   /electron@28.3.3:
@@ -3588,8 +3588,8 @@ packages:
     dev: true
     optional: true
 
-  /node-releases@2.0.42:
-    resolution: {integrity: sha512-82oTqvxWiryawVr05wUCPL6zqc54SfJBzQ+Yzq5JKchbg1C8BT0w5RESe2xTSdX4qtlDvCAhZSaUijpMKuo5ig==}
+  /node-releases@2.0.44:
+    resolution: {integrity: sha512-5WUyunoPMsvvEhS8AxHtRzP+oA8UCkJ7YRxatWKjngndhDGLiqEVAQKWjFAiAiuL8zMRGzGSJxFnLetoa43qGQ==}
     dev: true
 
   /normalize-path@3.0.0:
