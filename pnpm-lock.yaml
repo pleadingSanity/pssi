@@ -38,11 +38,11 @@ devDependencies:
     specifier: ^20.19.41
     version: 20.19.41
   '@types/react':
-    specifier: ^18.3.29
-    version: 18.3.29
+    specifier: ^18.3.30
+    version: 18.3.30
   '@types/react-dom':
     specifier: ^18.3.7
-    version: 18.3.7(@types/react@18.3.29)
+    version: 18.3.7(@types/react@18.3.30)
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.21.0
     version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.1)(typescript@5.9.3)
@@ -1348,16 +1348,16 @@ packages:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
     dev: true
 
-  /@types/react-dom@18.3.7(@types/react@18.3.29):
+  /@types/react-dom@18.3.7(@types/react@18.3.30):
     resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
     peerDependencies:
       '@types/react': ^18.0.0
     dependencies:
-      '@types/react': 18.3.29
+      '@types/react': 18.3.30
     dev: true
 
-  /@types/react@18.3.29:
-    resolution: {integrity: sha512-ch0qJdr2JY0r04NXSprbK6TXOgnaJ1Tz23fm5W+z0/CBah6BSBc3n96h7K9GOtwh0HrilNWHIBzE1Ko4Dcw/Wg==}
+  /@types/react@18.3.30:
+    resolution: {integrity: sha512-3ek6mwJL5/VBewBcY4S66cqlCtK3qi4WIq37Z0m/NHw1hjhI7274Mx1qz/+ggSzyBCOEf7eHjBN6INjPAWYfYw==}
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
@@ -1868,7 +1868,7 @@ packages:
       baseline-browser-mapping: 2.10.33
       caniuse-lite: 1.0.30001793
       electron-to-chromium: 1.5.364
-      node-releases: 2.0.46
+      node-releases: 2.0.47
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
     dev: true
 
@@ -3581,8 +3581,8 @@ packages:
     dev: true
     optional: true
 
-  /node-releases@2.0.46:
-    resolution: {integrity: sha512-GYVXHE2KnrzAfsAjl4uP++evGFCrAU1jta4ubEjIG7YWt/64Gqv66a30yKwWczVjA6j3bM4nBwH7Pk1JmDHaxQ==}
+  /node-releases@2.0.47:
+    resolution: {integrity: sha512-Uzmd6LXpouKo8EUK68IjH4+E01w/hXyV3R3g/geCJo+rXLNfh1xucB+LOzYEOQPSiUK3h/xZf0cQGcSsmyL2Og==}
     engines: {node: '>=18'}
     dev: true
 
