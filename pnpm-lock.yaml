@@ -3275,8 +3275,8 @@ packages:
       picocolors: 1.1.1
     dev: true
 
-  /joi@17.13.4:
-    resolution: {integrity: sha512-1RuuER6kmt8K8I3nIWvPZKi5RQCb568ZPyY4Pwjlua+yo+63ZTmIwxLZH0heBmiKN4uxjvCiarDrjaeH84xicQ==}
+  /joi@17.13.6:
+    resolution: {integrity: sha512-ImNZaq/LSysofih+xIGYfR0WUXMA9GLUNB//YTCSrZptoRmVgaNAdJyi6K1kXi9pkLEoSkoI8I4UwtNiu/D7nw==}
     dependencies:
       '@hapi/hoek': 9.3.0
       '@hapi/topo': 5.1.0
@@ -4529,7 +4529,7 @@ packages:
     hasBin: true
     dependencies:
       axios: 1.19.0
-      joi: 17.13.4
+      joi: 17.13.6
       lodash: 4.18.1
       minimist: 1.2.8
       rxjs: 7.8.2
