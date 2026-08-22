@@ -1570,8 +1570,8 @@ packages:
       - supports-color
     dev: true
 
-  /@xmldom/xmldom@0.9.11:
-    resolution: {integrity: sha512-tW8bcK3hsG0/uqSnNz6TK4BkcuZSezoU7DlnYssILmZDktPnSHHuDJJFM0AJv+13gz2r0iGdrj6qqKeUnxXEDg==}
+  /@xmldom/xmldom@0.9.12:
+    resolution: {integrity: sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==}
     engines: {node: '>=14.6'}
     requiresBuild: true
     dev: true
@@ -1798,8 +1798,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /baseline-browser-mapping@2.11.16:
-    resolution: {integrity: sha512-H/bNPUFHewJHyCTdjn1n3Pit5+2GmWT6mmeHImPX+8MA9NA6b67jO4gYmi4jTbCJb2otq34KMZnovndDPqJwhQ==}
+  /baseline-browser-mapping@2.11.17:
+    resolution: {integrity: sha512-KAUDn1OSS0fmPlGO+NOUMRcOQ/b/shUBH3OgkG73mPgdf+JD/BQ6fHboGxNOxnUmlwcq+lLq3dTkayRPuSfXwg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dev: true
@@ -1874,7 +1874,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.11.16
+      baseline-browser-mapping: 2.11.17
       caniuse-lite: 1.0.30001809
       electron-to-chromium: 1.5.412
       node-releases: 2.0.53
@@ -3731,7 +3731,7 @@ packages:
     resolution: {integrity: sha512-ZIfcLJC+7E7FBFnDxm9MPmt7D+DidyQ26lewieO75AdhA2ayMtsJSES0iWzqJQbcVRSrTufQoy0DR94xHue0oA==}
     engines: {node: '>=10.4.0'}
     dependencies:
-      '@xmldom/xmldom': 0.9.11
+      '@xmldom/xmldom': 0.9.12
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
     dev: true
